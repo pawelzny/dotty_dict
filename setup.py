@@ -20,7 +20,7 @@ test_requirements = [
 
 setup(
     name='dotty_dict',
-    version='0.1.0',
+    version='0.1.1',
     description="Dotty dict-like object allow to access deeply nested keys using dot notation.",
     long_description=readme + '\n\n' + history,
     author="Paweł Zadrożny",
