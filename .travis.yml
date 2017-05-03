@@ -1,9 +1,14 @@
 language: python
 python:
 - "3.5"
-    env: TOXENV=py35
 - "3.6"
-    env: TOXENV=py36
+matrix:
+    fast_finish: true
+    include:
+        - python: 3.5
+            env: TOXENV=py35
+        - python: 3.6
+            env: TOXENV=py36
 install: pip install -U tox
 script: tox -e ${TOXENV}
 deploy:
