@@ -1,9 +1,10 @@
 language: python
-python: 3.5
+python:
+ - "3.5"
+ - "3.6"
 env:
 - TOXENV=py36
 - TOXENV=py35
-- TOXENV=pypy
 install: pip install -U tox
 script: tox -e ${TOXENV}
 deploy:
@@ -15,4 +16,3 @@ deploy:
   on:
     tags: true
     repo: pawelzny/dotty_dict
-    condition: "$TOXENV == py35"
