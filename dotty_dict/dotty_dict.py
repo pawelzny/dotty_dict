@@ -5,11 +5,11 @@ from collections import (Mapping, UserDict)
 
 
 class Dotty(UserDict):
-    """Dotty dict-like object support dot notation keys.
-    
+    """Dotty dictionary with support_for['dot.notation.keys'].
+
     Dotty dict-like object allow to access deeply nested keys using dot notation.
     Create Dotty from dict or other dict-like object to use magic of Dotty.
-    
+
     :example:
     <code>
         # Create dotty dict-like object.
@@ -18,19 +18,19 @@ class Dotty(UserDict):
                 'nested': 'nested value',
             },
         })
-        
+
         # Assign value to very deeply nested key not existing yet.
         dotty['deep_key.new_nested.very.deep.key'] = 'wow!'
-        
+
         # Old keys still there
         assert dotty['deep_key.nested'] == 'nested value'
-        
+
         # Access new deeply nested key
         assert dotty['deep_key.new_nested.very.deep.key'] == 'wow!'
-        
+
         # Old fashion way to get very deeply nested key
         assert dotty['deep_key']['new_nested']['very']['deep']['key'] == 'wow!'
-        
+
         # Get method with provided default value works as expected
         assert dotty.get('deep_key.new_nested.something', 'default value') == 'default value'
     </code>
@@ -50,11 +50,20 @@ class Dotty(UserDict):
         for leaf in tree:
             if leaf in item:
                 item = item[leaf]
+
             else:
-                item = None
-                break
+                return self.__missing__(leaf)
 
         return item
+
+    def __missing__(self, leaf):
+        """
+        Return None if nested leaf does not exist.
+        
+        :param (str) leaf: Single key in dot noted key
+        :return: Default value.
+        """
+        return None
 
     def __setitem__(self, key, value):
         """
@@ -123,7 +132,7 @@ class Dotty(UserDict):
         """
         Split dot notation key string to leafs.
         
-        :param (str) key: Dot notated key.
+        :param (str) key: Dot notated key.None
         :return: List of leafs.
         """
         return key.split('.')

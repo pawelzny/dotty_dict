@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import unittest
-from collections import Mapping, Container, UserDict
+from collections import Mapping, UserDict
 
 from dotty_dict.dotty_dict import Dotty
 

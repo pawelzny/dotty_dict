@@ -18,7 +18,7 @@ dotty_dict
      :alt: Updates
 
 
-Safely get nested dict value by dot notation key.
+Dotty dictionary with support_for['dot.notation.keys'].
 
 Dotty dict-like object allow to access deeply nested keys using dot notation.
 Create Dotty from dict or other dict-like object to use magic of Dotty.
@@ -30,14 +30,15 @@ Create Dotty from dict or other dict-like object to use magic of Dotty.
 
 Features
 --------
-* Accessing deeply nested key using dot notation
-* Returns None if key does not exist instead of raising KeyError exception
-* Assigning to deeply nested existing or not yet existing key
-* Get deeply nested value or provided default value with .get() method
+* Access and assign deeply nested dictionary key using dot notation
+* Return None if key doesn't exist instead of KeyError exception
+* Get deeply nested value or default value with .get() method
 
-TODO
+**TODO**
 
-* Escape dot sign to allow accessing keys with dot in it
+* Escape dot char for dictionary keys with dot: dotty_dict['strange\.key']
+* Check if key exists in deeply nested dictionary: 'deeply.nested' in dotty_dict
+* Delete deeply nested keys: del dotty_dict['deeply.nested']
 
 Credits
 -------
