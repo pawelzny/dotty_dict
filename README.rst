@@ -38,9 +38,12 @@ Features
 
 **TODO**
 
-* Escape dot char for dictionary keys with dot: dotty_dict['strange\.key']
-* Check if key exists in deeply nested dictionary: 'deeply.nested' in dotty_dict
-* Delete deeply nested keys: del dotty_dict['deeply.nested']
+* Escape dot char for dictionary keys with dot: **dotty_dict['key\.key']**
+* Delete deeply nested keys: **del dotty_dict['key.key']**
+* Check if key exists in deeply nested dictionary: **key.key.key in dotty_dict**
+* Check if key does not exist in deeply nested dictionary: **deeply.nested not in dotty_dict**
+* Pop nested key: **pop( key.key.key[, default] )**
+* Set default bug fix
 
 Credits
 -------
