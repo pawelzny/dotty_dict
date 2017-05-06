@@ -23,6 +23,8 @@ Dotty dictionary with support_for['dot.notation.keys'].
 Dotty dict-like object allow to access deeply nested keys using dot notation.
 Create Dotty from dict or other dict-like object to use magic of Dotty.
 
+Ultimate goal is to match all Python dictionary method to work with deeply nested **Dotty** keys.
+
 
 * Free software: MIT license
 * Documentation: https://dotty-dict.readthedocs.io.

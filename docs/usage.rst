@@ -33,13 +33,14 @@ To use **Dotty** in a project::
     >>> dotty
     {'first': {'second': {'deep': 'i am here!', 'deeper': {'better': {'faster': {'stronger': 'ohh!'}}}}}}
 
-Methods
--------
+Operations
+----------
 
-Ultimate goal is to match all Python dictionary method to work with deeply nested **Dotty** keys.
+**len(d)**
+
+Return the number of items in the **Dotty** dictionary *d*.
 
 **d[** *'key.key.key'* **]**
-++++++++++++++++++++++++++++
 
 Return the item of d with dot notation key. Returns None if key is not in the map.
 
@@ -51,10 +52,22 @@ Return the item of d with dot notation key. Returns None if key is not in the ma
     >>> dotty['foo.bar'] += ' & fizz'
     >>> dotty
     {'foo': {'bar': 'baz & fizz'}}
+    >>> dotty['foo.bar']
+    'baz & fizz'
 
+**d[** *'key.key.key'* **] = value**
+
+Set deeply nested *key.key.key* to value
+
+::
+
+    >>> from dotty_dict import Dotty
+    >>> dotty = Dotty()
+    >>> dotty['foo.bar'] = 'baz'
+    >>> dotty
+    {'foo': {'bar': 'baz'}}
 
 **.get(** *'key.key.key'* **[,** *default* **])**
-+++++++++++++++++++++++++++++++++++++++++++++++++
 
 If deeply nested key is in dictionary return it's value,
 but if key doesn't exist or it's value is None then return optional default value,
@@ -72,3 +85,10 @@ default defaults to None.
     >>> value
     'foo'
 
+**.clear()**
+
+Removes all items from **Dotty** dict
+
+**.copy()**
+
+Return a shallow copy of the dictionary.
