@@ -1,5 +1,0 @@
-coverage==4.4.2
-mock>=1.0.1
-flake8==3.5.0
-tox==2.9.1
-codecov>=2.0.0

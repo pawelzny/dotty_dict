@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple/"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+[dev-packages]
+bumpversion = "*"
+coverage = "*"
+"flake8" = "*"
+"flake8-bandit" = "*"
+"flake8-bugbear" = "*"
+"flake8-builtins" = "*"
+"flake8-comprehensions" = "*"
+"flake8-import-order" = "*"
+"flake8-rst-docstrings" = "*"
+"pep8-naming" = "*"
+pytest = "*"
+setuptools-scm = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+tox-pyenv = "*"
+tox = "*"
+twine = "*"

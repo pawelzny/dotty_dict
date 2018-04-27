@@ -1,59 +1,89 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
+import re
+import subprocess
 
-from setuptools import setup
+from setuptools import find_packages, setup
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from setuptools.command.test import test
 
-with open('README.rst') as readme_file:
+__author__ = 'Paweł Zadrożny'
+__copyright__ = 'Copyright (c) 2018, Pawelzny'
+__requires__ = ['pipenv']
+
+with open('README.rst', 'r') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
 
-requirements = []
-test_requirements = [
-    'coverage==4.3.4',
-    'mock>=1.0.1',
-    'flake8==3.3.0',
-    'tox==2.7.0',
-    'codecov>=2.0.0',
-]
+def get_version(*file_paths):
+    """Retrieves the version from project/__init__.py"""
+    filename = os.path.join(os.path.dirname(__file__), *file_paths)
+    version_file = open(filename).read()
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError('Unable to find version string.')
+
+
+class PostDevelopCommand(develop):
+    """Post-installation for development mode."""
+
+    def run(self):
+        subprocess.check_call(['pipenv', 'install', '--dev', '--deploy', '--system'])
+        develop.run(self)
+
+
+class PostInstallCommand(install):
+    """Post-installation for installation mode."""
+
+    def run(self):
+        subprocess.check_call(['pipenv', 'install', '--deploy', '--system'])
+        install.run(self)
+
+
+class TestCommand(test):
+    """Run tests"""
+
+    def run(self):
+        subprocess.check_call(['pytest'])
+        test.run(self)
+
 
 setup(
     name='dotty_dict',
-    version='0.1.9',
+    version=get_version('dotty_dict', '__init__.py'),
     description="Dotty dict-like object allow to access deeply nested keys using dot notation.",
-    long_description=readme + '\n\n' + history,
-    author="Paweł Zadrożny",
+    long_description=readme,
+    license="MIT license",
+    author="Paweł Zadrożny @pawelzny",
     author_email='pawel.zny@gmail.com',
     url='https://github.com/pawelzny/dotty_dict',
-    packages=[
-        'dotty_dict',
-    ],
+    packages=find_packages(exclude=('tests', 'docs', 'bin', 'example')),
     package_dir={'dotty_dict': 'dotty_dict'},
     include_package_data=True,
-    install_requires=requirements,
-    license="MIT license",
+    use_scm_version=True,
+    install_requires=['setuptools_scm'],
     zip_safe=False,
-    keywords='dotty_dict',
+    keywords='dotty_dict dict dot helper access wrapper',
     classifiers=[
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
         'Development Status :: 4 - Beta',
-
-        # Indicate who your project is intended for
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
-
-        # Pick your license as you wish (should match "license" above)
-        'License :: OSI Approved :: MIT License',
-
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
+        'Natural Language :: English',
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'License :: OSI Approved :: MIT License',
     ],
-    test_suite='tests',
-    tests_require=test_requirements
+    cmdclass={
+        'develop': PostDevelopCommand,
+        'install': PostInstallCommand,
+        'test': TestCommand,
+    },
 )
