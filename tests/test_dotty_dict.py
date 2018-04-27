@@ -1,107 +1,71 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import unittest
-from collections import Mapping, UserDict
 
 from dotty_dict.dotty_dict import Dotty
 
 
-class TestDottyDict(unittest.TestCase):
+class TestDottyBasics(unittest.TestCase):
+    def test_create_empty_instance(self):
+        dotty = Dotty()
+        self.assertEqual(dotty, {})
 
+    def test_create_non_empty_instance(self):
+        plain_dict = {'not': 'empty'}
+
+        dotty = Dotty(plain_dict)
+        self.assertEqual(dotty, plain_dict)
+        self.assertIsNot(dotty, plain_dict)
+
+    def test_raise_attr_error_if_input_is_not_dict(self):
+        with self.assertRaises(AttributeError):
+            Dotty(['not', 'valid'])
+
+    def test_two_dotty_with_the_same_input_should_be_equal(self):
+        first = Dotty({'is': 'valid'})
+        second = Dotty({'is': 'valid'})
+
+        self.assertEqual(first, second)
+
+    def test_two_dotty_with_different_input_should_not_be_equal(self):
+        first = Dotty({'counter': 1})
+        second = Dotty({'counter': 2})
+
+        self.assertNotEqual(first, second)
+
+
+class TestDottyValueAccess(unittest.TestCase):
     def setUp(self):
         self.dotty = Dotty({
-            'already': {
-                'exist': {
-                    'deep': 'key',
+            'flat_key': 'flat value',
+            'deep': {
+                'nested': 12,
+                'deeper': {
+                    'secret': 'abcd',
+                    'ridiculous': {
+                        'hell': 'is here',
+                    },
                 },
             },
-            'flat_key': 'i am here',
         })
 
-    def tearDown(self):
-        pass
+    def test_access_flat_value(self):
+        self.assertEqual(self.dotty['flat_key'], 'flat value')
 
-    def test_dotty_type(self):
-        # self.assertIsInstance(self.dotty, dict)
-        self.assertIsInstance(self.dotty, Mapping)
-        self.assertIsInstance(self.dotty, UserDict)
-        self.assertIsInstance(self.dotty, Dotty)
+    def test_non_existing_key_should_return_null(self):
+        self.assertIsNone(self.dotty['not_existing'])
 
-    def test_key_split(self):
-        key = 'super.deeply.nested.key'
-        tree = self.dotty._split(key)
+    def test_access_deep_nested_value(self):
+        self.assertEqual(self.dotty['deep.nested'], 12)
 
-        self.assertEqual(len(tree), 4)
-        self.assertEqual(tree[1], 'deeply')
+    def test_access_middle_nested_value(self):
+        self.assertDictEqual(self.dotty['deep.deeper.ridiculous'],
+                             {'hell': 'is here'})
 
-    def test_key_single_leaf(self):
-        self.dotty['single'] = 'test'
+    def test_set_flat_value(self):
+        self.dotty['new_flat'] = 'super flat'
+        self.assertIn('new_flat', self.dotty)
 
-        self.assertEqual(self.dotty['single'], 'test')
-        self.assertEqual(self.dotty.get('single'), 'test')
-
-    def test_key_nested_leaf(self):
-        self.dotty['single.nested'] = 'test'
-
-        self.assertEqual(self.dotty['single']['nested'], 'test')
-
-    def test_key_nested_leaf_update(self):
-        self.dotty['already.exist.new'] = 'value'
-
-        self.assertEqual(self.dotty['already']['exist']['deep'], 'key')
-        self.assertEqual(self.dotty['already']['exist']['new'], 'value')
-
-    def test_key_nested_leaf_replace(self):
-        self.dotty['already.exist'] = {'new': 'value'}
-
-        self.assertNotIn('deep', self.dotty['already']['exist'])
-        self.assertEqual(self.dotty['already']['exist']['new'], 'value')
-
-    def test_access_nested_value(self):
-        deep1 = self.dotty['already.exist.deep']
-        deep2 = self.dotty['already']['exist']['deep']
-
-        self.assertEqual(deep1, deep2)
-
-    def test_access_nested_value_not_exist(self):
-        self.assertIsNone(self.dotty['already.exist.black_hole'])
-
-    def test_work_with_not_dotty_dict_like_objects(self):
-        # Assume dict-like objects does not support dot notation
-        self.dotty['already.exist.custom'] = UserDict({
-            'not_dotty': {
-                'user_dict': 'I am deeply nested user dict value'
-            }
-        })
-
-        # Accessing not existing key from dict-like object should raise KeyError
-        self.assertRaises(KeyError, self.dotty['already.exist.custom.key_value'])
-
-        # One can access not Dotty dict-like object with dot notation
-        self.assertEqual(self.dotty['already.exist.custom.not_dotty.user_dict'],
-                         'I am deeply nested user dict value')
-
-        # one can add new key to not dotty dict-like object with dot notation
-        self.dotty['already.exist.custom.not_dotty.new_key'] = 'new key inside not dotty dict'
-
-        self.assertEqual(
-            self.dotty['already.exist.custom'],
-            {
-                'not_dotty': {
-                    'user_dict': 'I am deeply nested user dict value',
-                    'new_key': 'new key inside not dotty dict',
-                }
-            }
-        )
-
-    def test_get_value_simple(self):
-        self.assertEqual(self.dotty.get('flat_key'), 'i am here')
-
-    def test_get_value_nested(self):
-        self.assertEqual(self.dotty.get('already.exist.deep'), 'key')
-
-    def test_get_default_value_simple(self):
-        self.assertEqual(self.dotty.get('black_hole', 'default value'), 'default value')
-
-    def test_get_default_value_nested(self):
-        self.assertEqual(self.dotty.get('already.exist.black_hole', 'def value'), 'def value')
+    def test_set_deep_nested_value(self):
+        self.dotty['deep.new_key'] = 'new value'
+        self.assertIn('new_key', self.dotty['deep'])
