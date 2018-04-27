@@ -6,7 +6,7 @@ from collections import Mapping, UserDict
 from dotty_dict.dotty_dict import Dotty
 
 
-class TestDotty_dict(unittest.TestCase):
+class TestDottyDict(unittest.TestCase):
 
     def setUp(self):
         self.dotty = Dotty({
@@ -105,4 +105,3 @@ class TestDotty_dict(unittest.TestCase):
 
     def test_get_default_value_nested(self):
         self.assertEqual(self.dotty.get('already.exist.black_hole', 'def value'), 'def value')
-

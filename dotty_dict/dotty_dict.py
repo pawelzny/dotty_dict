@@ -9,40 +9,18 @@ class Dotty(UserDict):
 
     Dotty dict-like object allow to access deeply nested keys using dot notation.
     Create Dotty from dict or other dict-like object to use magic of Dotty.
-
-    :example:
-    <code>
-        # Create dotty dict-like object.
-        dotty = Dotty({
-            'deep_key': {
-                'nested': 'nested value',
-            },
-        })
-
-        # Assign value to very deeply nested key not existing yet.
-        dotty['deep_key.new_nested.very.deep.key'] = 'wow!'
-
-        # Old keys still there
-        assert dotty['deep_key.nested'] == 'nested value'
-
-        # Access new deeply nested key
-        assert dotty['deep_key.new_nested.very.deep.key'] == 'wow!'
-
-        # Old fashion way to get very deeply nested key
-        assert dotty['deep_key']['new_nested']['very']['deep']['key'] == 'wow!'
-
-        # Get method with provided default value works as expected
-        assert dotty.get('deep_key.new_nested.something', 'default value') == 'default value'
-    </code>
     """
+
+    def __init__(self, dictionary: dict):
+        super.__init__(dictionary)
 
     def __getitem__(self, key):
         """Get value from deeply nested key.
-        
+
         If key does not exist return None instead of raising KeyError exception.
 
-        :param key:
-        :return:
+        :param (str) key: Single key or dot separated nested keys.
+        :return: Value or None.
         """
         tree = self._split(key)
 
@@ -59,8 +37,8 @@ class Dotty(UserDict):
     def __missing__(self, leaf):
         """
         Return None if nested leaf does not exist.
-        
-        :param (str) leaf: Single key in dot noted key
+
+        :param (str) leaf: Single key in dot noted key.
         :return: Default value.
         """
         return None
@@ -73,10 +51,11 @@ class Dotty(UserDict):
         :param (any) value:
         :return:
         """
+
         def insert_into_dict(dictionary, leaf, val):
             """
             Recursively insert new keys and value at last to Dotty dictionary.
-            
+
             :param (dict|Dotty) dictionary:
             :param (str) leaf:
             :param (any) val:
@@ -131,7 +110,7 @@ class Dotty(UserDict):
     def _split(key):
         """
         Split dot notation key string to leafs.
-        
+
         :param (str) key: Dot notated key.None
         :return: List of leafs.
         """
@@ -140,7 +119,7 @@ class Dotty(UserDict):
     def get(self, key, default=None):
         """
         Get dictionary value if exists otherwise get default value.
-        
+
         :param (str) key: Dot notated key.
         :param (any) default: Default value if value does not exist.
         :return:
