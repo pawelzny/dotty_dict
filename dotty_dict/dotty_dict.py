@@ -1,148 +1,112 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Dotty_Dict Module."""
-
-from collections import (Mapping, UserDict)
+from collections import Mapping
 
 
-class Dotty(UserDict):
-    """Dotty dictionary with support_for['dot.notation.keys'].
+def dotty(dictionary=None):
+    if dictionary is None:
+        dictionary = {}
+    return Dotty(dictionary, separator='.', esc_char='\\')
 
-    Dotty dict-like object allow to access deeply nested keys using dot notation.
-    Create Dotty from dict or other dict-like object to use magic of Dotty.
 
-    :example:
-    <code>
-        # Create dotty dict-like object.
-        dotty = Dotty({
-            'deep_key': {
-                'nested': 'nested value',
-            },
-        })
+class Dotty:
+    def __init__(self, dictionary, separator, esc_char):
+        if not isinstance(dictionary, Mapping):
+            raise AttributeError('Dictionary must be type of dict')
+        else:
+            self._data = dictionary
+        self.separator = separator
+        self.esc_char = esc_char
 
-        # Assign value to very deeply nested key not existing yet.
-        dotty['deep_key.new_nested.very.deep.key'] = 'wow!'
+    def __eq__(self, other):
+        try:
+            return sorted(self._data.items()) == sorted(other.items())
+        except AttributeError:
+            return False
 
-        # Old keys still there
-        assert dotty['deep_key.nested'] == 'nested value'
+    def __getattr__(self, item):
+        return getattr(self._data, item)
 
-        # Access new deeply nested key
-        assert dotty['deep_key.new_nested.very.deep.key'] == 'wow!'
-
-        # Old fashion way to get very deeply nested key
-        assert dotty['deep_key']['new_nested']['very']['deep']['key'] == 'wow!'
-
-        # Get method with provided default value works as expected
-        assert dotty.get('deep_key.new_nested.something', 'default value') == 'default value'
-    </code>
-    """
-
-    def __getitem__(self, key):
-        """Get value from deeply nested key.
-        
-        If key does not exist return None instead of raising KeyError exception.
-
-        :param key:
-        :return:
-        """
-        tree = self._split(key)
-
-        item = dict(self.data)
-        for leaf in tree:
-            if leaf in item:
-                item = item[leaf]
-
+    def __getitem__(self, item):
+        def get_from(items, data):
+            it = items.pop(0)
+            data = data[it]
+            if items:
+                return get_from(items, data)
             else:
-                return self.__missing__(leaf)
+                return data
 
-        return item
-
-    def __missing__(self, leaf):
-        """
-        Return None if nested leaf does not exist.
-        
-        :param (str) leaf: Single key in dot noted key
-        :return: Default value.
-        """
-        return None
+        return get_from(self._split(item), self._data)
 
     def __setitem__(self, key, value):
-        """
-        Set recursively new key:value item into Dotty dict. Allow to set deeply nested keys.
+        def set_to(items, data):
+            item = items.pop(0)
+            if items:
+                if item not in data:
+                    data[item] = {}
+                set_to(items, data[item])
+            else:
+                data[item] = value
 
-        :param (str) key:
-        :param (any) value:
-        :return:
-        """
-        def insert_into_dict(dictionary, leaf, val):
-            """
-            Recursively insert new keys and value at last to Dotty dictionary.
-            
-            :param (dict|Dotty) dictionary:
-            :param (str) leaf:
-            :param (any) val:
-            :return: New dictionary
-            :rtype: dict
-            """
-            if len(tree) > 0:
-                """
-                Create or update deeply nested dictionaries if there is more leaf to follow.
-                """
-                if leaf in dictionary and isinstance(dictionary[leaf], dict):
-                    """
-                    If dictionary leaf is instance of dict, convert it to Dotty dict
-                    then update instead of override.
-                    """
-                    dictionary[leaf] = Dotty(dictionary[leaf])
-                    dictionary[leaf].update(
-                        insert_into_dict(dictionary[leaf], tree.pop(0), val)
-                    )
+        set_to(self._split(key), self._data)
 
-                elif leaf in dictionary and isinstance(dictionary[leaf], Mapping):
-                    """
-                    If dictionary leaf is instance of dict-like object, update it
-                    instead of override.
-                    """
-                    dictionary[leaf].update(
-                        insert_into_dict(dictionary[leaf], tree.pop(0), val)
-                    )
+    def __contains__(self, item):
+        def search_in(items, data):
+            it = items.pop(0)
+            if items and it in data:
+                return search_in(items, data[it])
+            return it in data
 
-                else:
-                    """
-                    If dictionary leaf is not a dict nor dict-like object,
-                    override val with new Dotty dict.
-                    """
-                    dictionary[leaf] = insert_into_dict(
-                        Dotty(dictionary), tree.pop(0), val
-                    )
+        return search_in(self._split(item), self._data)
 
-                return dictionary
+    def __delitem__(self, key):
+        def del_key(items, data):
+            it = items.pop(0)
+            if items and it in data:
+                return del_key(items, data[it])
+            elif not items and it in data:
+                del data[it]
+            elif not items and it not in data:
+                raise KeyError(it)
 
-            """
-            Assign val to last leaf in tree then return dictionary.
-            """
-            dictionary[leaf] = val
+        del_key(self._split(key), self._data)
 
-            return dictionary
-
-        tree = self._split(key)
-        self.data = insert_into_dict(dict(self.data), tree.pop(0), value)
-
-    @staticmethod
-    def _split(key):
-        """
-        Split dot notation key string to leafs.
-        
-        :param (str) key: Dot notated key.None
-        :return: List of leafs.
-        """
-        return key.split('.')
+    def __len__(self):
+        return len(self._data)
 
     def get(self, key, default=None):
-        """
-        Get dictionary value if exists otherwise get default value.
-        
-        :param (str) key: Dot notated key.
-        :param (any) default: Default value if value does not exist.
-        :return:
-        """
-        return self.__getitem__(key) or default
+        try:
+            return self.__getitem__(key)
+        except KeyError:
+            return default
+
+    def pop(self, key, default=None):
+        def pop_from(items, data):
+            it = items.pop(0)
+            if items:
+                data = data[it]
+                return pop_from(items, data)
+            else:
+                return data.pop(it, default)
+
+        return pop_from(self._split(key), self._data)
+
+    def setdefault(self, key, default=None):
+        if key in self._data:
+            return self.__getitem__(key)
+        self.__setitem__(key, default)
+        return default
+
+    def _split(self, key):
+        esc_stamp = (self.esc_char + self.separator, '<#esc#>')
+        skp_stamp = ('\\' + self.esc_char + self.separator, '<#skp#>' + self.separator)
+
+        stamp_esc = ('<#esc#>', self.separator)
+        stamp_skp = ('<#skp#>', self.esc_char)
+
+        key = key.replace(*skp_stamp).replace(*esc_stamp)
+        keys = key.split(self.separator)
+        for i, k in enumerate(keys):
+            keys[i] = k.replace(*stamp_esc).replace(*stamp_skp)
+
+        return keys
