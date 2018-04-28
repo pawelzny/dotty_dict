@@ -264,8 +264,8 @@ class TestDictSpecificMethods(unittest.TestCase):
         self.assertListEqual(keys, ['deep', 'flat_key'])
 
     def test_access_keys_from_deeply_nested_structure(self):
-        keys = list(self.dot['deep.deeper'].keys())
-        self.assertListEqual(keys, ['secret', 'ridiculous'])
+        keys = list(sorted(self.dot['deep.deeper'].keys()))
+        self.assertListEqual(keys, ['ridiculous', 'secret'])
 
     def test_get_value_without_default(self):
         result = self.dot.get('deep.nested')
