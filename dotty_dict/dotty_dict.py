@@ -4,6 +4,11 @@ from collections import Mapping
 
 
 def dotty(dictionary=None):
+    """Factory function for Dotty class.
+
+    :param dict dictionary: Any dictionary or dict-like object
+    :return: Dotty instance
+    """
     if dictionary is None:
         dictionary = {}
     return Dotty(dictionary, separator='.', esc_char='\\')
@@ -17,6 +22,10 @@ class Dotty:
             self._data = dictionary
         self.separator = separator
         self.esc_char = esc_char
+
+    def __repr__(self):
+        return 'Dotty(dictionary={}, separator={!r}, esc_char={!r})'.format(
+            self._data, self.separator, self.esc_char)
 
     def __eq__(self, other):
         try:
@@ -96,6 +105,9 @@ class Dotty:
             return self.__getitem__(key)
         self.__setitem__(key, default)
         return default
+
+    def to_dict(self):
+        return self._data
 
     def _split(self, key):
         esc_stamp = (self.esc_char + self.separator, '<#esc#>')

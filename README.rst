@@ -1,55 +1,102 @@
-==========
-dotty_dict
-==========
+**********
+Dotty Dict
+**********
 
+:Info: Dictionary wrapper for quick access to deeply nested keys.
+:Author: Paweł Zadrożny @pawelzny <pawel.zny@gmail.com>
+
+.. image:: https://circleci.com/gh/pawelzny/dotty_dict/tree/master.svg?style=shield&circle-token=77f51e87481f339d69ca502fdbb0c2b1a76c0369
+   :target: https://circleci.com/gh/pawelzny/dotty_dict/tree/master
+   :alt: CI Status
+
+.. image:: https://readthedocs.org/projects/vo/badge/?version=latest
+   :target: http://dotty-dict.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 .. image:: https://img.shields.io/pypi/v/dotty_dict.svg
-        :target: https://pypi.python.org/pypi/dotty_dict
+   :target: https://pypi.org/project/dotty_dict/
+   :alt: PyPI Repository Status
 
-.. image:: https://img.shields.io/travis/pawelzny/dotty_dict.svg
-        :target: https://travis-ci.org/pawelzny/dotty_dict
+.. image:: https://img.shields.io/github/release/pawelzny/dotty_dict.svg
+   :target: https://github.com/pawelzny/dotty_dict
+   :alt: Release Status
 
-.. image:: https://readthedocs.org/projects/dotty-dict/badge/?version=latest
-        :target: https://dotty-dict.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+.. image:: https://img.shields.io/pypi/status/dotty_dict.svg
+   :target: https://pypi.org/project/dotty_dict/
+   :alt: Project Status
 
-.. image:: https://pyup.io/repos/github/pawelzny/dotty_dict/shield.svg
-     :target: https://pyup.io/repos/github/pawelzny/dotty_dict/
-     :alt: Updates
+.. image:: https://img.shields.io/pypi/pyversions/dotty_dict.svg
+   :target: https://pypi.org/project/dotty_dict/
+   :alt: Supported python versions
 
+.. image:: https://img.shields.io/pypi/implementation/dotty_dict.svg
+   :target: https://pypi.org/project/dotty_dict/
+   :alt: Supported interpreters
 
-Dotty dictionary with support_for['dot.notation.keys'].
-
-Dotty dict-like object allow to access deeply nested keys using dot notation.
-Create Dotty from dict or other dict-like object to use magic of Dotty.
-
-Ultimate goal is to match all Python dictionary method to work with deeply nested **Dotty** keys.
-
-
-* Free software: MIT license
-* Documentation: https://dotty-dict.readthedocs.io.
+.. image:: https://img.shields.io/pypi/l/dotty_dict.svg
+   :target: https://github.com/pawelzny/dotty_dict/blob/master/LICENSE
+   :alt: License
 
 
 Features
---------
-* Access and assign deeply nested dictionary key using dot notation
-* Return None if key doesn't exist instead of KeyError exception
-* Get deeply nested value or default value with .get() method
+========
 
-**TODO**
+* Simple wrapper around python dictionary and dict like objects
+* Two wrappers with the same dict are considered equal
+* Access to deeply nested keys with dot notation: ``dot['deeply.nested.key']``
+* Create, read, update and delete nested keys of any length
+* Expose all dictionary methods like ``.get``, ``.pop`` and other
 
-* Escape dot char for dictionary keys with dot: **dotty_dict['key\.key']**
-* Delete deeply nested keys: **del dotty_dict['key.key']**
-* Check if key exists in deeply nested dictionary: **key.key.key in dotty_dict**
-* Check if key does not exist in deeply nested dictionary: **deeply.nested not in dotty_dict**
-* Pop nested key: **pop( key.key.key[, default] )**
-* Set default bug fix
 
-Credits
--------
+Installation
+============
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+.. code:: bash
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+   pipenv install dotty-dict  # or pip install dotty-dict
 
+
+**Package**: https://pypi.org/project/dotty-dict/
+
+
+Documentation
+=============
+
+* Full documentation: http://dotty-dict.readthedocs.io
+* Public API: http://dotty-dict.readthedocs.io/en/latest/api.html
+* Examples and usage ideas: http://dotty-dict.readthedocs.io/en/latest/examples.html
+
+
+Quick Example
+=============
+
+Create new dotty using factory function.
+
+.. code-block:: python
+
+   >>> from dotty_dict import dotty
+   >>> dot = dotty({'plain': {'old': {'python': 'dictionary'}}})
+   >>> dot['plain.old']
+   {'python': 'dictionary'}
+
+
+You can start with empty dotty
+
+.. code-block:: python
+
+   >>> from dotty_dict import dotty
+   >>> dot = dotty()
+   >>> dot['very.deeply.nested.thing'] = 'spam'
+   >>> dot
+   Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}}}}, separator='.', esc_char='\\')
+
+   >>> dot['very.deeply.spam'] = 'indeed'
+   >>> dot
+   Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}, 'spam': 'indeed'}}}, separator='.', esc_char='\\')
+
+   >>> del dot['very.deeply.nested']
+   >>> dot
+   Dotty(dictionary={'very': {'deeply': {'spam': 'indeed'}}}, separator='.', esc_char='\\')
+
+   >>> dot.get('very.not_existing.key')
+   None
