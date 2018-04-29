@@ -45,7 +45,7 @@ Features
 * Two wrappers with the same dict are considered equal
 * Access to deeply nested keys with dot notation: ``dot['deeply.nested.key']``
 * Create, read, update and delete nested keys of any length
-* Expose all dictionary methods like ``.get``, ``.pop`` and other
+* Expose all dictionary methods like ``.get``, ``.pop``, ``.keys`` and other
 
 
 Installation
@@ -66,6 +66,12 @@ Documentation
 * Full documentation: http://dotty-dict.readthedocs.io
 * Public API: http://dotty-dict.readthedocs.io/en/latest/api.html
 * Examples and usage ideas: http://dotty-dict.readthedocs.io/en/latest/examples.html
+
+
+TODO
+====
+
+* key=value caching to speed up lookups and low down memory consumption
 
 
 Quick Example
