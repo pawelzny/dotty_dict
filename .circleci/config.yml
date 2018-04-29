@@ -94,6 +94,28 @@ jobs:
       - run:
           name: run tests
           command: pipenv run flake8 vo tests
+  docs:
+    docker:
+      - image: circleci/python:3.6.4
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Pipfile.lock" }}
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            pip install pipenv
+            pipenv install --three --dev --ignore-pipfile
+      - save_cache:
+          paths:
+            - ./repo
+          key: v1-dependencies-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: build docs
+          command: pipenv run make docs
 workflows:
   version: 2
   test_all:
@@ -102,3 +124,4 @@ workflows:
       - py36
       - pypy35
       - flake8
+      - docs

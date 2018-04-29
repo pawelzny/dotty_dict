@@ -18,3 +18,69 @@ But I found a solution ... I hope!
 ******
 Basics
 ******
+
+The easiest way to use Dotty dict is with function factory.
+Factory takes only one, optional dictionary as argument.
+
+If leaved empty, factory function will create new, empty dictionary.
+
+
+Wrap existing dict
+==================
+
+.. literalinclude:: ../example/basics.py
+   :language: python
+   :dedent: 4
+   :start-after: wrap_existing_dict
+   :end-before: # end of wrap_existing_dict
+
+
+Create new dotty
+================
+
+.. literalinclude:: ../example/basics.py
+   :language: python
+   :dedent: 4
+   :start-after: create_new_dotty
+   :end-before: # end of create_new_dotty
+
+
+Builtin methods
+===============
+
+Dotty exposes all native to dict, builtin methods.
+Only change is made to method which uses key as input to accept dot notation.
+
+.. literalinclude:: ../example/basics.py
+   :language: python
+   :dedent: 4
+   :start-after: builtin_methods
+   :end-before: # end of builtin_methods
+
+
+********
+Advanced
+********
+
+Lets simulate more real scenario. API requests and responses are often very complex
+with many deeply nested keys. And when you need to check one of them it may
+looks like: ``res.get('data', {}).get('service', {}).get('status', {}).get('current', False)``.
+
+**It's awful!** All this empty dictionary fallback to dig in for current status!
+
+Make API request
+================
+
+In this scenario we will send post request to create new user with superuser privileges.
+Below there is example response as dictionary, and then the way to check granted privileges.
+
+.. literalinclude:: ../example/advanced.py
+   :language: python
+   :dedent: 4
+   :start-after: api_request
+   :end-before: # end of api_request
+   :emphasize-lines: 45
+
+*************
+Customization
+*************

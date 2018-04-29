@@ -47,7 +47,7 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	pipenv run $(MAKE) -C docs html
 
 release: sdist ## package and upload a release
-	twine upload dist/*
+	pipenv run twine upload dist/*
 
 sdist: clean ## package
 	pipenv run python setup.py sdist

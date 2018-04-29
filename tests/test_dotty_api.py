@@ -154,3 +154,17 @@ class TestDictSpecificMethods(unittest.TestCase):
                 },
             },
         })
+
+    def test_copy(self):
+        first = dotty({'a': 1, 'b': 2})
+        second = first.copy()
+
+        self.assertIsInstance(second, Dotty)
+        self.assertEqual(first, second)
+        self.assertIsNot(first, second)
+        self.assertIsNot(first._data, second._data)
+
+    def test_fromkeys(self):
+        dot = dotty().fromkeys({'a', 'b', 'c'}, value=10)
+        self.assertDictEqual(dot.to_dict(), {'a': 10, 'b': 10, 'c': 10})
+        self.assertIsInstance(dot, Dotty)

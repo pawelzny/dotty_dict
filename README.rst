@@ -1,5 +1,5 @@
 **********
-Dotty Dict
+Dotty-Dict
 **********
 
 :Info: Dictionary wrapper for quick access to deeply nested keys.

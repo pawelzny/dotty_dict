@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 from collections import Mapping
 
+__author__ = 'Paweł Zadrożny'
+__copyright__ = 'Copyright (c) 2017, Paweł Zadrożny'
+
 
 def dotty(dictionary=None):
     """Factory function for Dotty class.
@@ -34,6 +37,7 @@ class Dotty:
     :param str separator: Character used to chain deep access.
     :param str esc_char: Escape character for separator.
     """
+
     def __init__(self, dictionary, separator, esc_char):
         if not isinstance(dictionary, Mapping):
             raise AttributeError('Dictionary must be type of dict')
@@ -46,14 +50,35 @@ class Dotty:
         return 'Dotty(dictionary={}, separator={!r}, esc_char={!r})'.format(
             self._data, self.separator, self.esc_char)
 
+    def __str__(self):
+        return str(self._data)
+
     def __eq__(self, other):
         try:
             return sorted(self._data.items()) == sorted(other.items())
         except AttributeError:
             return False
 
+    def __len__(self):
+        return len(self._data)
+
     def __getattr__(self, item):
         return getattr(self._data, item)
+
+    def __contains__(self, item):
+        def search_in(items, data):
+            """Recursively search for deep key in dict.
+
+            :param list items: List of dictionary keys
+            :param data: Portion of dictionary to operate on
+            :return bool: Predicate of key existence
+            """
+            it = items.pop(0)
+            if items and it in data:
+                return search_in(items, data[it])
+            return it in data
+
+        return search_in(self._split(item), self._data)
 
     def __getitem__(self, item):
         def get_from(items, data):
@@ -90,21 +115,6 @@ class Dotty:
 
         set_to(self._split(key), self._data)
 
-    def __contains__(self, item):
-        def search_in(items, data):
-            """Recursively search for deep key in dict.
-
-            :param list items: List of dictionary keys
-            :param data: Portion of dictionary to operate on
-            :return bool: Predicate of key existence
-            """
-            it = items.pop(0)
-            if items and it in data:
-                return search_in(items, data[it])
-            return it in data
-
-        return search_in(self._split(item), self._data)
-
     def __delitem__(self, key):
         def del_key(items, data):
             """Recursively remove deep key from dict.
@@ -123,8 +133,24 @@ class Dotty:
 
         del_key(self._split(key), self._data)
 
-    def __len__(self):
-        return len(self._data)
+    def copy(self):
+        """Returns a shallow copy of dictionary wrapped in Dotty.
+
+        :return: Dotty instance
+        """
+        return dotty(self._data.copy())
+
+    @staticmethod
+    def fromkeys(seq, value=None):
+        """Create a new dictionary with keys from seq and values set to value.
+
+        New created dictionary is wrapped in Dotty.
+
+        :param seq: Sequence of elements which is to be used as keys for the new dictionary
+        :param value: Value which is set to each element of the dictionary
+        :return: Dotty instance
+        """
+        return dotty(dict.fromkeys(seq, value))
 
     def get(self, key, default=None):
         """Get value from deep key or default if key does not exist.
@@ -152,6 +178,7 @@ class Dotty:
         :raises KeyError: If key does not exist and default has not been provided
         :return: Any or default value
         """
+
         def pop_from(items, data):
             it = items.pop(0)
             if items:
