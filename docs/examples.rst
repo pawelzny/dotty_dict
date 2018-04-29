@@ -11,7 +11,7 @@ But I found a solution ... I hope!
           | Every change in source code enforce change in examples.
           | **Outdated examples == failed build**.
           |
-          | You can check at https://github.com/pawelzny/vo/blob/master/tests/test_examples.py
+          | You can check at https://github.com/pawelzny/dotty_dict/blob/master/tests/test_examples.py
 
 .. seealso:: Look at :ref:`Public API` for more details.
 
