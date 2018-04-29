@@ -55,3 +55,37 @@ def api_request():
     assert response['status.code'] == 200
     assert 'superuser' in response['data.user.privileges.granted']
     # end of api_request
+
+
+def escape_character():
+    from dotty_dict import dotty
+
+    dot = dotty({
+        'deep': {
+            'key': 'value',
+        },
+        'key.with.dot': {
+            'deeper': 'other value',
+        },
+    })
+
+    # how to access deeper value?
+    assert dot['key\.with\.dot.deeper'] == 'other value'
+    # end of escape_character
+
+
+def escape_the_escape_character():
+    from dotty_dict import dotty
+
+    dot = dotty({
+        'deep': {
+            'key': 'value',
+        },
+        'key.with_backslash\\': {  # backslash at the end of key
+            'deeper': 'other value',
+        },
+    })
+
+    # escape first dot and escape the escape character before second dot
+    assert dot['key\.with_backslash\\\.deeper'] == 'other value'
+    # end of escape_the_escape_character

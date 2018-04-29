@@ -175,7 +175,7 @@ class TestDottyValueAccess(unittest.TestCase):
         dot = Dotty({}, separator=sep, esc_char=esc)
         dot['abcd,efg,hij'] = 'test'
         dot['abcd,efg$,hij'] = 'test2'
-        dot['abcd,efg\\$,hij'] = 'test3'
+        dot['abcd,efg\$,hij'] = 'test3'
         self.assertDictEqual(dot._data, {
             'abcd': {
                 'efg': {
