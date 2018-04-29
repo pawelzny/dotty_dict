@@ -69,7 +69,7 @@ setup(
     zip_safe=False,
     keywords='dotty_dict dict dot helper access wrapper',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Topic :: Software Development',
