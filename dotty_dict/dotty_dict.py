@@ -6,6 +6,8 @@ from collections import Mapping
 def dotty(dictionary=None):
     """Factory function for Dotty class.
 
+    Create Dotty wrapper around existing or new dictionary.
+
     :param dict dictionary: Any dictionary or dict-like object
     :return: Dotty instance
     """
@@ -15,6 +17,23 @@ def dotty(dictionary=None):
 
 
 class Dotty:
+    """Dictionary and dict-like objects wrapper.
+
+    Dotty wraps dictionary and provides proxy for quick accessing to deeply
+    nested keys and values using dot notation.
+
+    Dot notation can be customize in special cases. Let's say dot character
+    has special meaning, and you want to use other character for accessing
+    deep keys.
+
+    Dotty does not copy original dictionary but it operates on it.
+    All changes made in original dictionary are reflected in dotty wrapped dict
+    and vice versa.
+
+    :param dict dictionary: Any dictionary or dict-like object
+    :param str separator: Character used to chain deep access.
+    :param str esc_char: Escape character for separator.
+    """
     def __init__(self, dictionary, separator, esc_char):
         if not isinstance(dictionary, Mapping):
             raise AttributeError('Dictionary must be type of dict')
@@ -38,6 +57,13 @@ class Dotty:
 
     def __getitem__(self, item):
         def get_from(items, data):
+            """Recursively get value from dictionary deep key.
+
+            :param list items: List of dictionary keys
+            :param data: Portion of dictionary to operate on
+            :return: Value from dictionary
+            :raises KeyError: If key does not exist
+            """
             it = items.pop(0)
             data = data[it]
             if items:
@@ -49,6 +75,11 @@ class Dotty:
 
     def __setitem__(self, key, value):
         def set_to(items, data):
+            """Recursively set value to dictionary deep key.
+
+            :param list items: List of dictionary keys
+            :param data: Portion of dictionary to operate on
+            """
             item = items.pop(0)
             if items:
                 if item not in data:
@@ -61,6 +92,12 @@ class Dotty:
 
     def __contains__(self, item):
         def search_in(items, data):
+            """Recursively search for deep key in dict.
+
+            :param list items: List of dictionary keys
+            :param data: Portion of dictionary to operate on
+            :return bool: Predicate of key existence
+            """
             it = items.pop(0)
             if items and it in data:
                 return search_in(items, data[it])
@@ -70,6 +107,12 @@ class Dotty:
 
     def __delitem__(self, key):
         def del_key(items, data):
+            """Recursively remove deep key from dict.
+
+            :param list items: List of dictionary keys
+            :param data: Portion of dictionary to operate on
+            :raises KeyError: If key does not exist
+            """
             it = items.pop(0)
             if items and it in data:
                 return del_key(items, data[it])
@@ -84,12 +127,31 @@ class Dotty:
         return len(self._data)
 
     def get(self, key, default=None):
+        """Get value from deep key or default if key does not exist.
+
+        This method match 1:1 with dict .get method except that it
+        accepts deeply nested key with dot notation.
+
+        :param str key: Single key or chain of keys
+        :param Any default: Default value if deep key does not exist
+        :return: Any or default value
+        """
         try:
             return self.__getitem__(key)
         except KeyError:
             return default
 
     def pop(self, key, default=None):
+        """Pop key from Dotty.
+
+        This method match 1:1 with dict .pop method except that
+        it accepts deeply nested key with dot notation.
+
+        :param str key: Single key or chain of keys
+        :param Any default: If default is provided will be returned
+        :raises KeyError: If key does not exist and default has not been provided
+        :return: Any or default value
+        """
         def pop_from(items, data):
             it = items.pop(0)
             if items:
@@ -101,15 +163,38 @@ class Dotty:
         return pop_from(self._split(key), self._data)
 
     def setdefault(self, key, default=None):
+        """Get key value if exist otherwise set default value under given key
+        and return its value.
+
+        This method match 1:1 with dict .setdefault method except that
+        it accepts deeply nested key with dot notation.
+
+        :param str key: Single key or chain of keys
+        :param Any default: Default value for not existing key
+        :return: Value under given key or default
+        """
         if key in self._data:
             return self.__getitem__(key)
         self.__setitem__(key, default)
         return default
 
     def to_dict(self):
+        """Return wrapped dictionary.
+
+        This method does not copy wrapped dictionary.
+
+        :return dict: Wrapped dictionary
+        """
         return self._data
 
     def _split(self, key):
+        """Split dot notated chain of keys.
+
+        Works with custom separators and escape characters.
+
+        :param str key: Single key or chain of keys
+        :return list: List of keys
+        """
         esc_stamp = (self.esc_char + self.separator, '<#esc#>')
         skp_stamp = ('\\' + self.esc_char + self.separator, '<#skp#>' + self.separator)
 
