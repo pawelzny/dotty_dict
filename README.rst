@@ -56,7 +56,8 @@ Installation
    pipenv install dotty-dict  # or pip install dotty-dict
 
 
-**Package**: https://pypi.org/project/dotty-dict/
+* **Package**: https://pypi.org/project/dotty-dict/
+* **Source**: https://github.com/pawelzny/dotty_dict
 
 
 Documentation
