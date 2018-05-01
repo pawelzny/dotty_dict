@@ -55,7 +55,7 @@ class TestCommand(test):
 setup(
     name='dotty_dict',
     version=get_version('dotty_dict', '__init__.py'),
-    description="Dotty dict-like object allow to access deeply nested keys using dot notation.",
+    description="Dictionary wrapper for quick access to deeply nested keys.",
     long_description=readme,
     license="MIT license",
     author="Paweł Zadrożny @pawelzny",
@@ -67,7 +67,7 @@ setup(
     use_scm_version=True,
     install_requires=['setuptools_scm'],
     zip_safe=False,
-    keywords='dotty_dict dict dot helper access wrapper',
+    keywords='dot notation dict wrapper helper utils lib',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
