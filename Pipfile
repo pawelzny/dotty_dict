@@ -3,12 +3,11 @@ url = "https://pypi.org/simple/"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
 
 [dev-packages]
 bumpversion = "*"
-coverage = "*"
+coverage = "==4.5.2"
 "flake8" = "*"
 "flake8-bandit" = "*"
 "flake8-bugbear" = "*"
@@ -17,10 +16,11 @@ coverage = "*"
 "flake8-import-order" = "*"
 "flake8-rst-docstrings" = "*"
 "pep8-naming" = "*"
-pytest = "*"
+pytest = "==4.0.0"
 setuptools-scm = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 tox-pyenv = "*"
 tox = "*"
 twine = "*"
+pathlib2 = "*"

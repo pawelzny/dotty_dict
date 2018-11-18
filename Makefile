@@ -6,8 +6,6 @@ help:
 
 install: ## install dependencies
 	pipenv install
-
-install-dev: install ## install dev dependencies
 	pipenv install --dev
 
 clean: clean-build clean-pyc clean-cache

@@ -11,7 +11,6 @@ from setuptools.command.test import test
 
 __author__ = 'Paweł Zadrożny'
 __copyright__ = 'Copyright (c) 2018, Pawelzny'
-__requires__ = ['pipenv']
 
 with open('README.rst', 'r') as readme_file:
     readme = readme_file.read()
@@ -34,14 +33,6 @@ class PostDevelopCommand(develop):
     def run(self):
         subprocess.check_call(['pipenv', 'install', '--dev', '--deploy', '--system'])
         develop.run(self)
-
-
-class PostInstallCommand(install):
-    """Post-installation for installation mode."""
-
-    def run(self):
-        subprocess.check_call(['pipenv', 'install', '--deploy', '--system'])
-        install.run(self)
 
 
 class TestCommand(test):
@@ -77,13 +68,13 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'License :: OSI Approved :: MIT License',
     ],
     cmdclass={
         'develop': PostDevelopCommand,
-        'install': PostInstallCommand,
         'test': TestCommand,
     },
 )
