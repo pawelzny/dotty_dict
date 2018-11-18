@@ -70,7 +70,7 @@ def escape_character():
     })
 
     # how to access deeper value?
-    assert dot['key\.with\.dot.deeper'] == 'other value'
+    assert dot[r'key\.with\.dot.deeper'] == 'other value'
     # end of escape_character
 
 
@@ -87,5 +87,5 @@ def escape_the_escape_character():
     })
 
     # escape first dot and escape the escape character before second dot
-    assert dot['key\.with_backslash\\\.deeper'] == 'other value'
+    assert dot[r'key\.with_backslash\\.deeper'] == 'other value'
     # end of escape_the_escape_character

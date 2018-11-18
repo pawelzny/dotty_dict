@@ -53,7 +53,7 @@ Installation
 
 .. code:: bash
 
-   pipenv install dotty-dict  # or pip install dotty-dict
+   pip install dotty-dict
 
 
 * **Package**: https://pypi.org/project/dotty-dict/
@@ -107,3 +107,26 @@ You can start with empty dotty
 
    >>> dot.get('very.not_existing.key')
    None
+
+
+Install for development
+=======================
+
+Install dev dependencies
+
+```console
+$ make install
+```
+
+Testing
+=======
+
+```console
+$ make test
+```
+
+Or full tests with TOX:
+
+```console
+$ make test-all
+```

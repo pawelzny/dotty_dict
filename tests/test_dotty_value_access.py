@@ -118,7 +118,7 @@ class TestDottyValueAccess(unittest.TestCase):
             del self.dot['deep.deeper.key']
 
     def test_set_value_with_escaped_separator(self):
-        self.dot['deep.deeper.escaped\.dot_key'] = 'it works!'
+        self.dot[r'deep.deeper.escaped\.dot_key'] = 'it works!'
         self.assertDictEqual(self.dot._data, {
             'flat_key': 'flat value',
             'deep': {
@@ -147,7 +147,7 @@ class TestDottyValueAccess(unittest.TestCase):
                 },
             },
         })
-        result = dot['deep.deeper.escaped\.dot_key']
+        result = dot[r'deep.deeper.escaped\.dot_key']
         self.assertEqual(result, 'it works!')
 
     def test_get_value_with_escaped_escape_separator(self):
@@ -166,7 +166,7 @@ class TestDottyValueAccess(unittest.TestCase):
                 },
             },
         })
-        result = dot['deep.deeper.escaped\\\\.dot_key']
+        result = dot[r'deep.deeper.escaped\\.dot_key']
         self.assertEqual(result, 'it works!')
 
     def test_use_custom_separator_and_custom_escape_char(self):
@@ -175,7 +175,7 @@ class TestDottyValueAccess(unittest.TestCase):
         dot = Dotty({}, separator=sep, esc_char=esc)
         dot['abcd,efg,hij'] = 'test'
         dot['abcd,efg$,hij'] = 'test2'
-        dot['abcd,efg\$,hij'] = 'test3'
+        dot[r'abcd,efg\$,hij'] = 'test3'
         self.assertDictEqual(dot._data, {
             'abcd': {
                 'efg': {
