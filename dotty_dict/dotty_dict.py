@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from collections import Mapping
+from collections.abc import Mapping
 
 __author__ = 'Paweł Zadrożny'
 __copyright__ = 'Copyright (c) 2017, Paweł Zadrożny'
