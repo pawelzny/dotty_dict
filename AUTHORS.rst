@@ -13,6 +13,6 @@ Development
 Contributors
 ************
 
-**None yet. Why not be the first?**
+* Linus Groh @linusg
 
 Read more how to contribute on :ref:`Contributing`.
