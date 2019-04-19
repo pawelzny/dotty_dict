@@ -84,6 +84,19 @@ Below there is example response as dictionary, and then the way to check granted
    :emphasize-lines: 45
 
 
+Access dict with embedded lists
+===============================
+
+This scenario shows how to access subfield in a list.
+
+.. literalinclude:: ../example/advanced.py
+   :language: python
+   :dedent: 4
+   :start-after: list_embedded
+   :end-before: # end of list_embedded
+   :emphasize-lines: 4
+
+
 Escape character
 ================
 

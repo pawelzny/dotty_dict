@@ -46,6 +46,7 @@ Features
 * Access to deeply nested keys with dot notation: ``dot['deeply.nested.key']``
 * Create, read, update and delete nested keys of any length
 * Expose all dictionary methods like ``.get``, ``.pop``, ``.keys`` and other
+* Access dicts in lists by index ``dot['parents.0.first_name']``
 
 
 Installation
@@ -71,6 +72,7 @@ Documentation
 TODO
 ====
 
+* support for setting value in multidimensional lists
 * key=value caching to speed up lookups and low down memory consumption
 
 

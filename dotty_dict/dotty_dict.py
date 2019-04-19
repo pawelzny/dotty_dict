@@ -19,6 +19,21 @@ def dotty(dictionary=None):
     return Dotty(dictionary, separator='.', esc_char='\\')
 
 
+def dotty_l(dictionary=None):
+    """Factory function for Dotty class.
+
+    Create Dotty wrapper around existing or new dictionary with support
+    for embedded list.
+
+    :param dict dictionary: Any dictionary or dict-like object
+    :return: Dotty instance
+    """
+    if dictionary is None:
+        dictionary = {}
+    return Dotty(dictionary, separator='.', esc_char='\\', list_embedded=True)
+
+
+# TODO: Refactoring needed: Create a new type of Dotty for lists and use strategy pattern.
 class Dotty:
     """Dictionary and dict-like objects wrapper.
 
@@ -36,15 +51,17 @@ class Dotty:
     :param dict dictionary: Any dictionary or dict-like object
     :param str separator: Character used to chain deep access.
     :param str esc_char: Escape character for separator.
+    :param bool list_embedded: If set to True all numeric keys will be converted to indexes
     """
 
-    def __init__(self, dictionary, separator, esc_char):
+    def __init__(self, dictionary, separator, esc_char, list_embedded=False):
         if not isinstance(dictionary, Mapping):
             raise AttributeError('Dictionary must be type of dict')
         else:
             self._data = dictionary
         self.separator = separator
         self.esc_char = esc_char
+        self.list_embedded = list_embedded
 
     def __repr__(self):
         return 'Dotty(dictionary={}, separator={!r}, esc_char={!r})'.format(
@@ -74,6 +91,16 @@ class Dotty:
             :return bool: Predicate of key existence
             """
             it = items.pop(0)
+            if self.list_embedded and it.isdigit():
+                try:
+                    idx = int(it)
+                except ValueError:
+                    raise KeyError("List index must be an integer, got {}".format(it))
+                if idx < len(data):
+                    return search_in(items, data[idx])
+                else:
+                    return False
+
             if items and it in data:
                 return search_in(items, data[it])
             return it in data
@@ -90,7 +117,22 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            data = data[it]
+            # Handle embedded lists
+            if self.list_embedded and it.isdigit():
+                try:
+                    idx = int(it)
+                except ValueError:
+                    raise KeyError("List index must be an integer, got {}".format(it))
+                if idx < len(data):
+                    return get_from(items, data[idx])
+                else:
+                    raise IndexError("List index out of range")
+            # /end Handle embedded lists
+
+            try:
+                data = data[it]
+            except TypeError:
+                raise KeyError("List index must be an integer, got {}".format(it))
             if items:
                 return get_from(items, data)
             else:
@@ -105,13 +147,32 @@ class Dotty:
             :param list items: List of dictionary keys
             :param data: Portion of dictionary to operate on
             """
-            item = items.pop(0)
+            it = items.pop(0)
             if items:
-                if item not in data:
-                    data[item] = {}
-                set_to(items, data[item])
+                # Handle embedded lists
+                if self.list_embedded:
+                    if it.isdigit():
+                        try:
+                            it = int(it)
+                        except ValueError:
+                            raise KeyError("List index must be an integer, got {}".format(it))
+
+                    if items[0].isdigit():
+                        idx = int(items[0])
+                        if it not in data:
+                            data[it] = []
+                        if len(data[it]) < idx + 1:
+                            # TODO: support multi dimensional lists
+                            for _ in range(idx + 1 - len(data[it])):
+                                data[it].append({})
+                else:
+                    # /end Handle embedded lists
+                    if it not in data:
+                        data[it] = {}
+
+                set_to(items, data[it])
             else:
-                data[item] = value
+                data[it] = value
 
         set_to(self._split(key), self._data)
 
@@ -124,7 +185,15 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            if items and it in data:
+            # Handle embedded lists
+            if self.list_embedded and it.isdigit():
+                try:
+                    it = int(it)
+                except ValueError:
+                    raise KeyError("List index must be an integer, got {}".format(it))
+                del_key(items, data[it])
+                # /end Handle embedded lists
+            elif items and it in data:
                 return del_key(items, data[it])
             elif not items and it in data:
                 del data[it]

@@ -57,6 +57,28 @@ def api_request():
     # end of api_request
 
 
+def list_embedded():
+    from dotty_dict import dotty_l
+
+    # use dotty_l if you need support for lists
+    # WARNING!
+    # Right now you can read and delete from multidimensional lists
+    # but setting value is supported only for one dimensional list.
+
+    dot = dotty_l({
+        'annotations': [
+            {'label': 'app', 'value': 'webapi'},
+            {'label': 'role', 'value': 'admin'},
+        ]
+    })
+
+    assert dot['annotations.0.label'] == 'app'
+    assert dot['annotations.0.value'] == 'webapi'
+    assert dot['annotations.1.label'] == 'role'
+    assert dot['annotations.1.value'] == 'admin'
+    # end of list_embedded
+
+
 def escape_character():
     from dotty_dict import dotty
 
