@@ -269,10 +269,11 @@ class Dotty:
         :param Any default: Default value for not existing key
         :return: Value under given key or default
         """
-        if key in self._data:
+        try:
             return self.__getitem__(key)
-        self.__setitem__(key, default)
-        return default
+        except KeyError:
+            self.__setitem__(key, default)
+            return default
 
     def to_dict(self):
         """Return wrapped dictionary.

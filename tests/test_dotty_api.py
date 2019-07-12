@@ -121,7 +121,7 @@ class TestDictSpecificMethods(unittest.TestCase):
             },
         })
 
-    def test_setdefault_flat(self):
+    def test_setdefault_flat_not_existing(self):
         result = self.dot.setdefault('next_flat', 'new default value')
         self.assertEqual(result, 'new default value')
         self.assertDictEqual(self.dot._data, {
@@ -138,7 +138,25 @@ class TestDictSpecificMethods(unittest.TestCase):
             },
         })
 
-    def test_setdefault_nested_key(self):
+    def test_setdefault_flat_existing(self):
+        self.dot['next_flat'] = 'original value'
+        result = self.dot.setdefault('next_flat', 'new default value')
+        self.assertEqual(result, 'original value')
+        self.assertDictEqual(self.dot._data, {
+            'flat_key': 'flat value',
+            'next_flat': 'original value',
+            'deep': {
+                'nested': 12,
+                'deeper': {
+                    'secret': 'abcd',
+                    'ridiculous': {
+                        'hell': 'is here',
+                    },
+                },
+            },
+        })
+
+    def test_setdefault_nested_key_not_existing(self):
         result = self.dot.setdefault('deep.deeper.next_key', 'new default value')
         self.assertEqual(result, 'new default value')
         self.assertDictEqual(self.dot._data, {
@@ -147,6 +165,24 @@ class TestDictSpecificMethods(unittest.TestCase):
                 'nested': 12,
                 'deeper': {
                     'next_key': 'new default value',
+                    'secret': 'abcd',
+                    'ridiculous': {
+                        'hell': 'is here',
+                    },
+                },
+            },
+        })
+
+    def test_setdefault_nested_key_existing(self):
+        self.dot['deep.deeper.next_key'] = 'original value'
+        result = self.dot.setdefault('deep.deeper.next_key', 'new default value')
+        self.assertEqual(result, 'original value')
+        self.assertDictEqual(self.dot._data, {
+            'flat_key': 'flat value',
+            'deep': {
+                'nested': 12,
+                'deeper': {
+                    'next_key': 'original value',
                     'secret': 'abcd',
                     'ridiculous': {
                         'hell': 'is here',
