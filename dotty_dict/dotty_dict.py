@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from collections.abc import Mapping
+try:
+    from collections.abc import Mapping
+except ImportError:
+    from collections import Mapping
 
 __author__ = 'Paweł Zadrożny'
 __copyright__ = 'Copyright (c) 2017, Paweł Zadrożny'
@@ -55,7 +58,7 @@ class Dotty:
     """
 
     def __init__(self, dictionary, separator, esc_char, list_embedded=False):
-        if not isinstance(dictionary, Mapping):
+        if not isinstance(dictionary, (Mapping, dict)):
             raise AttributeError('Dictionary must be type of dict')
         else:
             self._data = dictionary
