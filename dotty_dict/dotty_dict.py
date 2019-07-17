@@ -127,7 +127,10 @@ class Dotty:
                 except ValueError:
                     raise KeyError("List index must be an integer, got {}".format(it))
                 if idx < len(data):
-                    return get_from(items, data[idx])
+                    if len(items) > 0:
+                        return get_from(items, data[idx])
+                    else:
+                        return data[idx]
                 else:
                     raise IndexError("List index out of range")
             # /end Handle embedded lists

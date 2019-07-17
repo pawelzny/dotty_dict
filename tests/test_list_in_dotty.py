@@ -25,8 +25,12 @@ class TestListInDotty(unittest.TestCase):
                 {
                     'subfield1': [{'subsubfield': 'Value of sub subfield (item 0)'}]
                 }
-            ]
+            ],
+            'field6': ['a', 'b']
         })
+
+    def test_root_level_list_element(self):
+        self.assertEqual(self.dot['field6.0'], 'a')
 
     def test_access_subfield1_of_field3(self):
         self.assertEqual(self.dot['field3.0.subfield1'], 'Value of subfield1 (item 0)')
