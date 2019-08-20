@@ -5,6 +5,8 @@ try:
 except ImportError:
     from collections import Mapping
 
+from functools import lru_cache
+
 __author__ = 'Paweł Zadrożny'
 __copyright__ = 'Copyright (c) 2017, Paweł Zadrożny'
 
@@ -73,6 +75,9 @@ class Dotty:
     def __str__(self):
         return str(self._data)
 
+    def __hash__(self):
+        return hash(str(self))
+
     def __eq__(self, other):
         try:
             return sorted(self._data.items()) == sorted(other.items())
@@ -110,6 +115,7 @@ class Dotty:
 
         return search_in(self._split(item), self._data)
 
+    @lru_cache(maxsize=32)
     def __getitem__(self, item):
         def get_from(items, data):
             """Recursively get value from dictionary deep key.
