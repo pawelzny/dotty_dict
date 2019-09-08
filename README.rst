@@ -118,19 +118,19 @@ Install for development
 
 Install dev dependencies
 
-```console
-$ make install
-```
+.. code-block:: console
+
+    $ make install
 
 Testing
 =======
 
-```console
-$ make test
-```
+.. code-block:: console
+
+    $ make test
 
 Or full tests with TOX:
 
-```console
-$ make test-all
-```
+.. code-block:: console
+
+    $ make test-all
