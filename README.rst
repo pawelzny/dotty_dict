@@ -48,6 +48,7 @@ Features
 * Expose all dictionary methods like ``.get``, ``.pop``, ``.keys`` and other
 * Access dicts in lists by index ``dot['parents.0.first_name']``
 * key=value caching to speed up lookups and low down memory consumption
+* support for setting value in multidimensional lists
 
 
 Installation
@@ -73,7 +74,7 @@ Documentation
 TODO
 ====
 
-* support for setting value in multidimensional lists
+Waiting for your feature requests ;)
 
 
 Quick Example
@@ -110,6 +111,7 @@ You can start with empty dotty
    >>> dot.get('very.not_existing.key')
    None
 
+NOTE: Using integer in dictionary keys will be treated as embedded list index.
 
 Install for development
 =======================

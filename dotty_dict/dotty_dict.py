@@ -36,6 +36,7 @@ def dotty_l(dictionary=None):
     """
     if dictionary is None:
         dictionary = {}
+    warnings.warn("[DEPRECIATION WARNING] There no mor eneed to use dotty_l. Just use dotty.")
     return Dotty(dictionary, separator='.', esc_char='\\', list_embedded=True)
 
 
@@ -146,10 +147,12 @@ class Dotty:
             """
             it = items.pop(0)
             if items:
+
                 if items[0].isdigit():
                     next_item = []
                 else:
                     next_item = {}
+
                 if it.isdigit():
                     it = int(it)
                     try:
@@ -162,11 +165,13 @@ class Dotty:
                     if not data.get(it):
                         data[it] = next_item
                     set_to(items, data[it])
+
             else:
                 if it.isdigit():
                     self.set_list_index(data, it, value)
                 else:
                     data[it] = value
+
         set_to(self._split(key), self._data)
 
     @staticmethod
