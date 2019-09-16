@@ -36,7 +36,7 @@ def dotty_l(dictionary=None):
     """
     if dictionary is None:
         dictionary = {}
-    warnings.warn("[DEPRECIATION WARNING] There no mor eneed to use dotty_l. Just use dotty.")
+    warnings.warn("[DEPRECIATION WARNING] There no more need to use dotty_l. Just use dotty.")
     return Dotty(dictionary, separator='.', esc_char='\\', list_embedded=True)
 
 
