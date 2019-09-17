@@ -5,6 +5,7 @@ try:
 except ImportError:
     from collections import Mapping
 
+import warnings
 from functools import lru_cache
 
 __author__ = 'Paweł Zadrożny'
@@ -35,10 +36,10 @@ def dotty_l(dictionary=None):
     """
     if dictionary is None:
         dictionary = {}
+    warnings.warn("[DEPRECIATION WARNING] There no more need to use dotty_l. Just use dotty.")
     return Dotty(dictionary, separator='.', esc_char='\\', list_embedded=True)
 
 
-# TODO: Refactoring needed: Create a new type of Dotty for lists and use strategy pattern.
 class Dotty:
     """Dictionary and dict-like objects wrapper.
 
@@ -59,14 +60,15 @@ class Dotty:
     :param bool list_embedded: If set to True all numeric keys will be converted to indexes
     """
 
-    def __init__(self, dictionary, separator, esc_char, list_embedded=False):
+    def __init__(self, dictionary, separator='.', esc_char='\\', list_embedded=False):
         if not isinstance(dictionary, (Mapping, dict)):
             raise AttributeError('Dictionary must be type of dict')
         else:
             self._data = dictionary
         self.separator = separator
         self.esc_char = esc_char
-        self.list_embedded = list_embedded
+        if list_embedded:
+            warnings.warn("[DEPRECIATION WARINING] list_embedded flag is depreciated.")
 
     def __repr__(self):
         return 'Dotty(dictionary={}, separator={!r}, esc_char={!r})'.format(
@@ -99,11 +101,8 @@ class Dotty:
             :return bool: Predicate of key existence
             """
             it = items.pop(0)
-            if self.list_embedded and it.isdigit():
-                try:
-                    idx = int(it)
-                except ValueError:
-                    raise KeyError("List index must be an integer, got {}".format(it))
+            if it.isdigit():
+                idx = int(it)
                 if idx < len(data):
                     return search_in(items, data[idx])
                 else:
@@ -126,21 +125,8 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            # Handle embedded lists
-            if self.list_embedded and it.isdigit():
-                try:
-                    idx = int(it)
-                except ValueError:
-                    raise KeyError("List index must be an integer, got {}".format(it))
-                if idx < len(data):
-                    if len(items) > 0:
-                        return get_from(items, data[idx])
-                    else:
-                        return data[idx]
-                else:
-                    raise IndexError("List index out of range")
-            # /end Handle embedded lists
-
+            if it.isdigit():
+                it = int(it)
             try:
                 data = data[it]
             except TypeError:
@@ -161,32 +147,46 @@ class Dotty:
             """
             it = items.pop(0)
             if items:
-                # Handle embedded lists
-                if self.list_embedded:
-                    if it.isdigit():
-                        try:
-                            it = int(it)
-                        except ValueError:
-                            raise KeyError("List index must be an integer, got {}".format(it))
 
-                    if items[0].isdigit():
-                        idx = int(items[0])
-                        if it not in data:
-                            data[it] = []
-                        if len(data[it]) < idx + 1:
-                            # TODO: support multi dimensional lists
-                            for _ in range(idx + 1 - len(data[it])):
-                                data[it].append({})
+                if items[0].isdigit():
+                    next_item = []
                 else:
-                    # /end Handle embedded lists
-                    if it not in data:
-                        data[it] = {}
+                    next_item = {}
 
-                set_to(items, data[it])
+                if it.isdigit():
+                    it = int(it)
+                    try:
+                        if not data[it]:
+                            data[it] = next_item
+                    except IndexError:
+                        self.set_list_index(data, it, next_item)
+                    set_to(items, data[it])
+                else:
+                    if not data.get(it):
+                        data[it] = next_item
+                    set_to(items, data[it])
+
             else:
-                data[it] = value
+                if it.isdigit():
+                    self.set_list_index(data, it, value)
+                else:
+                    data[it] = value
 
         set_to(self._split(key), self._data)
+
+    @staticmethod
+    def set_list_index(data, index, value):
+        """Set value in list at specified index.
+        All the values before target index should stay unchanged
+        or be filled with None.
+        :param data: List where value should be set
+        :param index: String or Int of target index
+        :param value: Target value to put under index
+        """
+        for _ in range(len(data), int(index) + 1):
+            data.append(None)
+        else:
+            data[int(index)] = value
 
     def __delitem__(self, key):
         def del_key(items, data):
@@ -197,20 +197,12 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            # Handle embedded lists
-            if self.list_embedded and it.isdigit():
-                try:
-                    it = int(it)
-                except ValueError:
-                    raise KeyError("List index must be an integer, got {}".format(it))
+            if it.isdigit():
+                it = int(it)
+            if items:
                 del_key(items, data[it])
-                # /end Handle embedded lists
-            elif items and it in data:
-                return del_key(items, data[it])
-            elif not items and it in data:
+            else:
                 del data[it]
-            elif not items and it not in data:
-                raise KeyError(it)
 
         del_key(self._split(key), self._data)
 

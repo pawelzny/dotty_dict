@@ -58,24 +58,36 @@ def api_request():
 
 
 def list_embedded():
-    from dotty_dict import dotty_l
+    from dotty_dict import dotty
 
-    # use dotty_l if you need support for lists
+    # dotty supports embedded lists
     # WARNING!
-    # Right now you can read and delete from multidimensional lists
-    # but setting value is supported only for one dimensional list.
+    # Dotty used to support lists only with dotty_l.
+    # This feature is depreciated - now lists have native support.
 
-    dot = dotty_l({
+    dot = dotty({
         'annotations': [
             {'label': 'app', 'value': 'webapi'},
             {'label': 'role', 'value': 'admin'},
-        ]
+        ],
+        'spec': {
+             'containers': [
+                 ['gpu', 'tensorflow', 'ML'],
+                 ['cpu', 'webserver', 'sql'],
+            ]
+        }
     })
 
     assert dot['annotations.0.label'] == 'app'
     assert dot['annotations.0.value'] == 'webapi'
     assert dot['annotations.1.label'] == 'role'
     assert dot['annotations.1.value'] == 'admin'
+    assert dot['spec.containers.0.0'] == 'gpu'
+    assert dot['spec.containers.0.1'] == 'tensorflow'
+    assert dot['spec.containers.0.2'] == 'ML'
+    assert dot['spec.containers.1.0'] == 'cpu'
+    assert dot['spec.containers.1.1'] == 'webserver'
+    assert dot['spec.containers.1.2'] == 'sql'
     # end of list_embedded
 
 
