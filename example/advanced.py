@@ -71,9 +71,9 @@ def list_embedded():
             {'label': 'role', 'value': 'admin'},
         ],
         'spec': {
-            'containers': [
-                {'name': 'containerA', 'labels': ['gpu', 'tensorflow', 'ML']},
-                {'name': 'containerB', 'labels': ['cpu', 'webserver', 'sql']}
+             'containers': [
+                 ['gpu', 'tensorflow', 'ML'],
+                 ['cpu', 'webserver', 'sql'],
             ]
         }
     })
@@ -82,14 +82,12 @@ def list_embedded():
     assert dot['annotations.0.value'] == 'webapi'
     assert dot['annotations.1.label'] == 'role'
     assert dot['annotations.1.value'] == 'admin'
-    assert dot['spec.containers.0.name'] == 'containerA'
-    assert dot['spec.containers.0.labels.0'] == 'gpu'
-    assert dot['spec.containers.0.labels.1'] == 'tensorflow'
-    assert dot['spec.containers.0.labels.2'] == 'ML'
-    assert dot['spec.containers.1.name'] == 'containerB'
-    assert dot['spec.containers.1.labels.0'] == 'cpu'
-    assert dot['spec.containers.1.labels.1'] == 'webserver'
-    assert dot['spec.containers.1.labels.2'] == 'sql'
+    assert dot['spec.containers.0.0'] == 'gpu'
+    assert dot['spec.containers.0.1'] == 'tensorflow'
+    assert dot['spec.containers.0.2'] == 'ML'
+    assert dot['spec.containers.1.0'] == 'cpu'
+    assert dot['spec.containers.1.1'] == 'webserver'
+    assert dot['spec.containers.1.2'] == 'sql'
     # end of list_embedded
 
 
