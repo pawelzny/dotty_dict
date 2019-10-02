@@ -46,3 +46,9 @@ class TestDottyBasics(unittest.TestCase):
         self.assertNotEqual(dot, {1, 2, 3})
         self.assertNotEqual(dot, 123)
         self.assertNotEqual(dot, 'a:1, b:2')
+
+    def test_pop_with_default_value(self):
+        dot = dotty()
+        self.assertEqual(dot.pop('does.not.exist', None), None)
+        self.assertEqual(dot.pop('does.not.exist', 55), 55)
+        self.assertEqual(dot.pop('does.not.exist', 'my_value'), 'my_value')

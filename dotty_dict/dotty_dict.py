@@ -254,6 +254,8 @@ class Dotty:
 
         def pop_from(items, data):
             it = items.pop(0)
+            if it not in data:
+                return default
             if items:
                 data = data[it]
                 return pop_from(items, data)
