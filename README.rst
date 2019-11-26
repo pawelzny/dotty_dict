@@ -134,3 +134,15 @@ Or full tests with TOX:
 .. code-block:: console
 
     $ make test-all
+
+Limitations
+===========
+
+In some very rare cases dotty may not work properly.
+
+* When nested dictionary has two keys of different type, but with the same value.
+  In that case dotty will return dict or list under random key with passed value.
+
+* Keys in dictionary may not contain dots. If you need to use dots, please specify dotty with custom separator.
+
+* Nested keys may not be bool type. Bool type keys are only supported when calling keys with type defined value (e.g. dot[True], dot[False]).

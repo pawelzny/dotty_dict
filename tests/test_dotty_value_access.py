@@ -187,3 +187,63 @@ class TestDottyValueAccess(unittest.TestCase):
                 },
             },
         })
+
+    def test_string_digit_key(self):
+        dot = dotty({'field': {
+            '1': 'one',
+            '5': 'five'
+        }})
+
+        dict_one = dot['field.1']
+        dict_five = dot['field.5']
+
+        self.assertEqual(dict_one, 'one')
+        self.assertEqual(dict_five, 'five')
+
+    def test_integer_keys(self):
+        dot = dotty({'field': {
+            1: 'one',
+            5: 'five'
+        }})
+
+        dict_one = dot['field.1']
+        dict_five = dot['field.5']
+
+        self.assertEqual(dict_one, 'one')
+        self.assertEqual(dict_five, 'five')
+
+    def test_data_gathering_with_int(self):
+        dot = dotty({
+            '2': 'string_value',
+            2: 'int_value',
+            'nested': {
+                '2': 'nested_string_value',
+                3: 'nested_int_value'
+            }
+        })
+
+        dict_string = dot['2']
+        dict_int = dot[2]
+        nested_dict_string = dot['nested.2']
+        nested_dict_int = dot['nested.3']
+
+        self.assertEqual(dict_string, 'string_value')
+        self.assertEqual(dict_int, 'int_value')
+        self.assertEqual(nested_dict_string, 'nested_string_value')
+        self.assertEqual(nested_dict_int, 'nested_int_value')
+
+    def test_non_standard_key_types(self):
+        dot = Dotty({
+            3.3: 'float',
+            True: 'bool',
+            'nested': {
+                4.4: 'nested_float'
+            }
+        }, separator=',')
+
+        dict_float = dot[3.3]
+        dict_bool = dot[True]
+        nested_dict_float = dot['nested,4.4']
+        self.assertEqual(dict_float, 'float')
+        self.assertEqual(dict_bool, 'bool')
+        self.assertEqual(nested_dict_float, 'nested_float')
