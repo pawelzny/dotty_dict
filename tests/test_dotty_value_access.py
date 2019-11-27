@@ -244,9 +244,9 @@ class TestDottyValueAccess(unittest.TestCase):
 
         dict_float = dot[3.3]
         dict_bool = dot[True]
-        dict_None = dot[None]
+        dict_none = dot[None]
         nested_dict_float = dot['nested,4.4']
         self.assertEqual(dict_float, 'float')
         self.assertEqual(dict_bool, 'bool')
-        self.assertEqual(dict_None, 'None')
+        self.assertEqual(dict_none, 'None')
         self.assertEqual(nested_dict_float, 'nested_float')
