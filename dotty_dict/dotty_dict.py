@@ -114,6 +114,32 @@ class Dotty:
 
         return search_in(self._split(item), self._data)
 
+    @staticmethod
+    def _find_data_type(item, data):
+        """This method returns item in datatype that exists in data dict.
+
+        Method creates set of types present in dict keys
+        and then iterates through them trying to convert item
+        into one of types and check whether item under this type
+        exists in dict keys. If yes then it'll return converted item.
+        Otherwise item stays the same type as it was on entry.
+
+        :param item: Item to convert to proper type
+        :type item: any type
+
+        :return: Converted or unchanged item
+        :rtype: any type
+        """
+        data_types = set([type(i) for i in data.keys()])
+        for t in data_types:
+            try:
+                if t(item) in data:
+                    item = t(item)
+                    return item
+            except ValueError:
+                pass
+        return item
+
     @lru_cache(maxsize=32)
     def __getitem__(self, item):
         def get_from(items, data):
@@ -125,8 +151,10 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            if it.isdigit():
+            if isinstance(data, list) and it.isdigit():
                 it = int(it)
+            elif it not in data and isinstance(data, dict):
+                it = self._find_data_type(it, data)
             try:
                 data = data[it]
             except TypeError:
@@ -298,6 +326,8 @@ class Dotty:
         :param str key: Single key or chain of keys
         :return list: List of keys
         """
+        if not isinstance(key, str):
+            return [key]
         esc_stamp = (self.esc_char + self.separator, '<#esc#>')
         skp_stamp = ('\\' + self.esc_char + self.separator, '<#skp#>' + self.separator)
 
