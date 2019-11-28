@@ -106,3 +106,17 @@ class TestListInDotty(unittest.TestCase):
         self.assertDictEqual(dot.to_dict(), {'field': [
             {'subfield1': 'Value of subfield1 (item 0)'},
         ]})
+
+    def test_list_as_return_value(self):
+        dot = dotty({
+            'field': [
+                'list_field0',
+                'list_field1'
+            ]
+        })
+
+        self.assertEqual(dot['field.0'], 'list_field0')
+        self.assertEqual(dot['field.1'], 'list_field1')
+        self.assertTrue('field.0' in dot)
+        self.assertTrue('field.1' in dot)
+        self.assertFalse('field.2' in dot)
