@@ -104,7 +104,10 @@ class Dotty:
             if it.isdigit():
                 idx = int(it)
                 if idx < len(data):
-                    return search_in(items, data[idx])
+                    if items:
+                        return search_in(items, data[idx])
+                    else:
+                        return data[idx]
                 else:
                     return False
 
