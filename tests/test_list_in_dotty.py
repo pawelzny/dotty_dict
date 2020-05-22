@@ -62,6 +62,10 @@ class TestListInDotty(unittest.TestCase):
         with self.assertRaises(IndexError):
             val = self.dot['field3.4.subfield1']  # noqa
 
+    def test_assert_get_returns_default_if_index_is_out_of_range(self):
+        val = self.dot.get('field3.4.subfield1')
+        assert val is None
+        
     def test_set_subfield_in_list(self):
         dot = dotty()
 
