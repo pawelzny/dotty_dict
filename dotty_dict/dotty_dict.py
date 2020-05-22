@@ -268,7 +268,7 @@ class Dotty:
         """
         try:
             return self.__getitem__(key)
-        except KeyError:
+        except (KeyError, IndexError):
             return default
 
     def pop(self, key, default=None):
