@@ -113,7 +113,7 @@ def list_slices():
     # end of list_slices
 
 
-def no_list():
+def no_list_flag():
     from dotty_dict import dotty
 
     # For special use cases dotty supports dictionary key only access
@@ -131,7 +131,7 @@ def no_list():
     assert dot['special.1'] == 'one'
     assert dot['special.:'] == 'colon'
     assert dot['special.2:'] == 'two colons'
-    # end of no_list
+    # end of no_list_flag
 
 
 def escape_character():
