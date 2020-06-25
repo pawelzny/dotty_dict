@@ -91,6 +91,27 @@ def list_embedded():
     # end of list_embedded
 
 
+def list_slices():
+    from dotty_dict import dotty
+
+    # dotty supports standard Python slices for lists
+
+    dot = dotty({
+        'annotations': [
+            {'label': 'app', 'value': 'webapi'},
+            {'label': 'role', 'value': 'admin'},
+            {'label': 'service', 'value': 'mail'},
+            {'label': 'database', 'value': 'postgres'}
+        ],
+    })
+
+    assert dot['annotations.:.label'] == ['app', 'role', 'service', 'database']
+    assert dot['annotations.:2.label'] == ['app', 'role']
+    assert dot['annotations.2:.label'] == ['service', 'database']
+    assert dot['annotations.::2.label'] == ['app', 'service']
+    # end of list_slices
+
+
 def escape_character():
     from dotty_dict import dotty
 

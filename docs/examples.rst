@@ -97,6 +97,19 @@ This scenario shows how to access subfield in a list.
    :emphasize-lines: 4
 
 
+Access multiple fields with list slices
+=======================================
+
+This scenario shows how to access multiple subfields in a list of dicts.
+
+.. literalinclude:: ../example/advanced.py
+   :language: python
+   :dedent: 4
+   :start-after: list_slices
+   :end-before: # end of list_slices
+   :emphasize-lines: 4
+
+
 Escape character
 ================
 
