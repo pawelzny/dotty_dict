@@ -5,39 +5,24 @@ try:
 except ImportError:
     from collections import Mapping
 
-import warnings
 from functools import lru_cache
 
 __author__ = 'Paweł Zadrożny'
 __copyright__ = 'Copyright (c) 2017, Paweł Zadrożny'
 
 
-def dotty(dictionary=None):
+def dotty(dictionary=None, no_list=False):
     """Factory function for Dotty class.
 
     Create Dotty wrapper around existing or new dictionary.
 
     :param dict dictionary: Any dictionary or dict-like object
+    :param bool no_list: If set to True then numeric keys will NOT be converted to list indices
     :return: Dotty instance
     """
     if dictionary is None:
         dictionary = {}
-    return Dotty(dictionary, separator='.', esc_char='\\')
-
-
-def dotty_l(dictionary=None):
-    """Factory function for Dotty class.
-
-    Create Dotty wrapper around existing or new dictionary with support
-    for embedded list.
-
-    :param dict dictionary: Any dictionary or dict-like object
-    :return: Dotty instance
-    """
-    if dictionary is None:
-        dictionary = {}
-    warnings.warn("[DEPRECIATION WARNING] There no more need to use dotty_l. Just use dotty.")
-    return Dotty(dictionary, separator='.', esc_char='\\', list_embedded=True)
+    return Dotty(dictionary, separator='.', esc_char='\\', no_list=no_list)
 
 
 class Dotty:
@@ -57,18 +42,17 @@ class Dotty:
     :param dict dictionary: Any dictionary or dict-like object
     :param str separator: Character used to chain deep access.
     :param str esc_char: Escape character for separator.
-    :param bool list_embedded: If set to True all numeric keys will be converted to indexes
+    :param bool no_list: If set to True then numeric keys will NOT be converted to list indices
     """
 
-    def __init__(self, dictionary, separator='.', esc_char='\\', list_embedded=False):
+    def __init__(self, dictionary, separator='.', esc_char='\\', no_list=False):
         if not isinstance(dictionary, (Mapping, dict)):
             raise AttributeError('Dictionary must be type of dict')
         else:
             self._data = dictionary
         self.separator = separator
         self.esc_char = esc_char
-        if list_embedded:
-            warnings.warn("[DEPRECIATION WARINING] list_embedded flag is depreciated.")
+        self.no_list = no_list
 
     def __repr__(self):
         return 'Dotty(dictionary={}, separator={!r}, esc_char={!r})'.format(
@@ -154,11 +138,11 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            if isinstance(data, list) and it.isdigit():
+            if isinstance(data, list) and it.isdigit() and not self.no_list:
                 it = int(it)
             elif it not in data and isinstance(data, dict):
                 it = self._find_data_type(it, data)
-            elif isinstance(data, list) and ':' in it:
+            elif isinstance(data, list) and ':' in it and not self.no_list:
                 list_slice = slice(*map(lambda x: None if x == '' else int(x), it.split(':')))
                 if items:
                     return [get_from(items.copy(), x) for x in  data[list_slice]]

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from dotty_dict import dotty_l as dotty
+from dotty_dict import dotty
 
 
 class TestListInDotty(unittest.TestCase):
@@ -220,3 +220,31 @@ class TestMultipleSelectList(unittest.TestCase):
             }
         ]
         self.assertListEqual(self.dot['field1.:'], expected_list)
+
+
+class TestNoList(unittest.TestCase):
+    def setUp(self):
+        self.dot = dotty({
+            'field1': {
+                '1': 'value1',
+                '2': {
+                    'subfield1': 'value2',
+                    'subfield2': 'value3'
+                },
+                ':': 'value4',
+                '2:': 'value5',
+                'key': 'value6'
+            },
+        }, no_list=True)
+
+    def test_simple_index(self):
+        self.assertEqual(self.dot['field1.1'], 'value1')
+
+    def test_whole_slice_index(self):
+        self.assertEqual(self.dot['field1.:'], 'value4')
+
+    def test_limit_slice_index(self):
+        self.assertEqual(self.dot['field1.2:'], 'value5')
+
+    def test_normal_key(self):
+        self.assertEqual(self.dot['field1.key'], 'value6')
