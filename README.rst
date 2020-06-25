@@ -49,6 +49,7 @@ Features
 * Access dicts in lists by index ``dot['parents.0.first_name']``
 * key=value caching to speed up lookups and low down memory consumption
 * support for setting value in multidimensional lists
+* support for accessing lists with slices
 
 
 Installation
