@@ -160,7 +160,10 @@ class Dotty:
                 it = self._find_data_type(it, data)
             elif isinstance(data, list) and ':' in it:
                 list_slice = slice(*map(lambda x: None if x == '' else int(x), it.split(':')))
-                return [get_from(items.copy(), x) for x in  data[list_slice]]
+                if items:
+                    return [get_from(items.copy(), x) for x in  data[list_slice]]
+                else:
+                    return data[list_slice]
             try:
                 data = data[it]
             except TypeError:

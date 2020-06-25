@@ -157,7 +157,8 @@ class TestMultipleSelectList(unittest.TestCase):
                         {
                             "nestedsubfield1": "nestedvalue011",
                             "nestedsubfield2": "nestedvalue012"
-                        }                    ]
+                        }
+                    ]
                 },
                 {
                     "subfield1": [
@@ -168,7 +169,8 @@ class TestMultipleSelectList(unittest.TestCase):
                         {
                             "nestedsubfield1": "nestedvalue111",
                             "nestedsubfield2": "nestedvalue112"
-                        }                    ]
+                        }
+                    ]
                 }
             ]
         })
@@ -197,3 +199,24 @@ class TestMultipleSelectList(unittest.TestCase):
     def test_step_slice(self):
         expected_list = ['value01', 'value21']
         self.assertListEqual(self.dot['field1.::2.subfield1'], expected_list)
+
+    def test_return_whole_list(self):
+        expected_list = [
+                {
+                    "subfield1": "value01",
+                    "subfield2": "value02"
+                },
+                {
+                    "subfield1": "value11",
+                    "subfield2": "value12"
+                },
+                {
+                    "subfield1": "value21",
+                    "subfield2": "value22"
+                },
+                {
+                    "subfield1": "value31",
+                    "subfield2": "value32"
+                }
+            ]
+        self.assertListEqual(self.dot['field1.:'], expected_list)
