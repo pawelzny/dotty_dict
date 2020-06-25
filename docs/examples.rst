@@ -113,13 +113,13 @@ This scenario shows how to access multiple subfields in a list of dicts.
 Access numeric fields as dict keys
 ==================================
 
-This scenario shows how to access numeric keys which should not be treated as list indices.
+This scenario shows how to access numeric keys which should not be treated as list indices
 
 .. literalinclude:: ../example/advanced.py
    :language: python
    :dedent: 4
-   :start-after: no_list_flag
-   :end-before: # end of no_list_flag
+   :start-after: no_list
+   :end-before: # end of no_list
    :emphasize-lines: 4
 
 
