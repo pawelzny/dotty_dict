@@ -202,21 +202,21 @@ class TestMultipleSelectList(unittest.TestCase):
 
     def test_return_whole_list(self):
         expected_list = [
-                {
-                    "subfield1": "value01",
-                    "subfield2": "value02"
-                },
-                {
-                    "subfield1": "value11",
-                    "subfield2": "value12"
-                },
-                {
-                    "subfield1": "value21",
-                    "subfield2": "value22"
-                },
-                {
-                    "subfield1": "value31",
-                    "subfield2": "value32"
-                }
-            ]
+            {
+                "subfield1": "value01",
+                "subfield2": "value02"
+            },
+            {
+                "subfield1": "value11",
+                "subfield2": "value12"
+            },
+            {
+                "subfield1": "value21",
+                "subfield2": "value22"
+            },
+            {
+                "subfield1": "value31",
+                "subfield2": "value32"
+            }
+        ]
         self.assertListEqual(self.dot['field1.:'], expected_list)
