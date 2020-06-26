@@ -63,7 +63,8 @@ def list_embedded():
     # dotty supports embedded lists
     # WARNING!
     # Dotty used to support lists only with dotty_l.
-    # This feature is depreciated - now lists have native support.
+    # This feature is depreciated and was removed - now lists have native support.
+    # If you need old functionality pass additional flag 'no_list' to dotty
 
     dot = dotty({
         'annotations': [
@@ -71,9 +72,9 @@ def list_embedded():
             {'label': 'role', 'value': 'admin'},
         ],
         'spec': {
-             'containers': [
-                 ['gpu', 'tensorflow', 'ML'],
-                 ['cpu', 'webserver', 'sql'],
+            'containers': [
+                ['gpu', 'tensorflow', 'ML'],
+                ['cpu', 'webserver', 'sql'],
             ]
         }
     })
@@ -110,6 +111,27 @@ def list_slices():
     assert dot['annotations.2:.label'] == ['service', 'database']
     assert dot['annotations.::2.label'] == ['app', 'service']
     # end of list_slices
+
+
+def no_list_flag():
+    from dotty_dict import dotty
+
+    # For special use cases dotty supports dictionary key only access
+    # With additional flag no_list passed to dotty
+    # all digits and slices will be treated as string keys
+
+    dot = dotty({
+        'special': {
+            '1': 'one',
+            ':': 'colon',
+            '2:': 'two colons'
+        }
+    })
+
+    assert dot['special.1'] == 'one'
+    assert dot['special.:'] == 'colon'
+    assert dot['special.2:'] == 'two colons'
+    # end of no_list_flag
 
 
 def escape_character():
