@@ -248,4 +248,3 @@ class TestNoList(unittest.TestCase):
 
     def test_normal_key(self):
         self.assertEqual(self.dot['field1.key'], 'value6')
-
