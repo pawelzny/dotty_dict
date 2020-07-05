@@ -24,18 +24,32 @@ class TestDottyPublicMembers(unittest.TestCase):
         self.assertIsInstance(dot.to_dict(), dict)
         self.assertEqual(sorted(dot.to_dict().items()), sorted(plain_dict.items()))
 
-    def test_nested_dotty_object(self):
+    def test_nested_dotty_object_to_dict(self):
         expected_dict = {'hello': {'world': 1}, 'nested': {'dotty': {'wazaa': 3}}}
         top_dot = dotty({'hello': {'world': 1}})
         nested_dot = dotty({'wazaa': 3})
         top_dot['nested.dotty'] = nested_dot
         self.assertDictEqual(top_dot.to_dict(), expected_dict)
 
-    def test_nested_dotty_in_list(self):
+    def test_nested_dotty_in_list_to_dict(self):
         expected_dict = {'testlist': [{'dot1': 1}, {'dot2': 2}]}
         dot_list = [dotty({'dot1': 1}), dotty({'dot2': 2})]
         top_dot = dotty({'testlist': dot_list})
         self.assertDictEqual(top_dot.to_dict(), expected_dict)
+
+    def test_nested_dotty_object_to_json(self):
+        expected_json = '{"hello": {"world": 1}, "nested": {"dotty": {"wazaa": 3}}}'
+        top_dot = dotty({'hello': {'world': 1}})
+        nested_dot = dotty({'wazaa': 3})
+        top_dot['nested.dotty'] = nested_dot
+        print(type(top_dot.to_json()))
+        self.assertEqual(top_dot.to_json(), expected_json)
+
+    def test_nested_dotty_in_list_to_json(self):
+        expected_json = '{"testlist": [{"dot1": 1}, {"dot2": 2}]}'
+        dot_list = [dotty({'dot1': 1}), dotty({'dot2': 2})]
+        top_dot = dotty({'testlist': dot_list})
+        self.assertEqual(top_dot.to_json(), expected_json)
 
 
 class TestDictSpecificMethods(unittest.TestCase):

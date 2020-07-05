@@ -312,6 +312,16 @@ class Dotty:
         """
         return json.loads(json.dumps(self._data, cls=DottyEncoder))
 
+    def to_json(self):
+        """Return wrapped dictionary as json string.
+
+        This method does not copy wrapped dictionary.
+
+        :return str: Wrapped dictionary as json string
+        """
+        return json.dumps(self._data, cls=DottyEncoder)
+
+
     def _split(self, key):
         """Split dot notated chain of keys.
 
@@ -334,10 +344,6 @@ class Dotty:
             keys[i] = k.replace(*stamp_esc).replace(*stamp_skp)
 
         return keys
-
-    def to_json(self):
-        return json.loads(json.dumps(self._data, cls=DottyEncoder))
-
 
 
 class DottyEncoder(json.JSONEncoder):
