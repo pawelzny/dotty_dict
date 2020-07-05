@@ -310,7 +310,7 @@ class Dotty:
 
         :return dict: Wrapped dictionary
         """
-        return json.loads(json.dumps(self._data, cls=DottyEncoder))
+        return json.loads(self.to_json())
 
     def to_json(self):
         """Return wrapped dictionary as json string.
