@@ -6,6 +6,7 @@ except ImportError:
     from collections import Mapping
 
 from functools import lru_cache
+import json
 
 __author__ = 'Paweł Zadrożny'
 __copyright__ = 'Copyright (c) 2017, Paweł Zadrożny'
@@ -309,7 +310,17 @@ class Dotty:
 
         :return dict: Wrapped dictionary
         """
-        return self._data
+        return json.loads(self.to_json())
+
+    def to_json(self):
+        """Return wrapped dictionary as json string.
+
+        This method does not copy wrapped dictionary.
+
+        :return str: Wrapped dictionary as json string
+        """
+        return json.dumps(self._data, cls=DottyEncoder)
+
 
     def _split(self, key):
         """Split dot notated chain of keys.
@@ -333,3 +344,20 @@ class Dotty:
             keys[i] = k.replace(*stamp_esc).replace(*stamp_skp)
 
         return keys
+
+
+class DottyEncoder(json.JSONEncoder):
+    """Helper class for encoding of nested Dotty dicts into standard dict
+    """
+    def default(self, obj):
+        """Return dict data of Dotty when possible or encode with standard format
+
+        :param object: Input object
+
+        :return: Serializable data
+        """
+        if hasattr(obj, '_data'):
+            return obj._data
+        else:
+            return json.JSONEncoder.default(self, obj)
+
