@@ -125,6 +125,13 @@ class TestListInDotty(unittest.TestCase):
         self.assertTrue('field.1' in dot)
         self.assertFalse('field.2' in dot)
 
+    def test_root_level_field_is_none(self):
+        dot = dotty({
+            'field': None,
+        })
+
+        self.assertIsNone(dot['field.0'])
+
 
 class TestMultipleSelectList(unittest.TestCase):
     def setUp(self):

@@ -153,7 +153,7 @@ class Dotty:
                 data = data[it]
             except TypeError:
                 raise KeyError("List index must be an integer, got {}".format(it))
-            if items:
+            if items and data is not None:
                 return get_from(items, data)
             else:
                 return data
