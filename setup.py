@@ -9,7 +9,7 @@ from setuptools.command.develop import develop
 from setuptools.command.install import install
 from setuptools.command.test import test
 
-__author__ = 'Pawel Zadrozny'
+__author__ = 'Paweł Zadrożny'
 __copyright__ = 'Copyright (c) 2018, Pawelzny'
 
 with open('README.rst', 'r') as readme_file:
@@ -49,7 +49,7 @@ setup(
     description="Dictionary wrapper for quick access to deeply nested keys.",
     long_description=readme,
     license="MIT license",
-    author="Pawel Zadrozny @pawelzny",
+    author="Paweł Zadrożny @pawelzny",
     author_email='pawel.zny@gmail.com',
     url='https://github.com/pawelzny/dotty_dict',
     packages=find_packages(exclude=('tests', 'docs', 'bin', 'example')),
