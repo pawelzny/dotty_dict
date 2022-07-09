@@ -8,7 +8,9 @@ class TestDottyCache(unittest.TestCase):
 
     def test_getitem_cache(self):
         dot = dotty()
+        dot.__getitem__.cache_clear()
         dot._data = MagicMock()
         for _ in range(10):
             dot.get('x.y.z')
         self.assertEqual(dot.__getitem__.cache_info().hits, 9)
+        dot.__getitem__.cache_clear()
