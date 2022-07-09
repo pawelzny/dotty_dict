@@ -54,11 +54,11 @@ class TestDictSpecificMethods(unittest.TestCase):
         })
 
     def test_access_keys(self):
-        keys = list(sorted(self.dot.keys()))
+        keys = sorted(self.dot.keys())
         self.assertListEqual(keys, ['deep', 'flat_key'])
 
     def test_access_keys_from_deeply_nested_structure(self):
-        keys = list(sorted(self.dot['deep.deeper'].keys()))
+        keys = sorted(self.dot['deep.deeper'].keys())
         self.assertListEqual(keys, ['ridiculous', 'secret'])
 
     def test_get_value_without_default(self):

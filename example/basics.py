@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'Paweł Zadrożny'
-__copyright__ = 'Copyright (c) 2018, Pawelzny'
+__author__ = 'Pawel Zadrozny'
+__copyright__ = 'Copyright (c) 2018, Pawel Zadrozny'
 
 
 def wrap_existing_dict():
@@ -79,5 +79,5 @@ def builtin_methods():
                    }}
 
     # get keys
-    assert list(sorted(dot.keys())) == ['data', 'status']
+    assert sorted(dot.keys()) == ['data', 'status']
     # end of builtin_methods

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'Paweł Zadrożny'
-__copyright__ = 'Copyright (c) 2018, Pawelzny'
+__author__ = 'Pawel Zadrozny'
+__copyright__ = 'Copyright (c) 2018, Pawel Zadrozny'
 
 
 def api_request():

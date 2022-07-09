@@ -5,8 +5,8 @@ import importlib
 import os
 from inspect import getmembers, isfunction
 
-__author__ = 'Paweł Zadrożny'
-__copyright__ = 'Copyright (c) 2018, Pawelzny'
+__author__ = 'Pawel Zadrozny'
+__copyright__ = 'Copyright (c) 2018, Pawel Zadrozny'
 
 
 def fetch_all_examples_for_testing():
