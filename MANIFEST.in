@@ -3,8 +3,8 @@ include CONTRIBUTING.rst
 include LICENSE
 include README.rst
 
-include PipFile
-include PipFile.lock
+include pyproject.toml
+include poetry.lock
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]

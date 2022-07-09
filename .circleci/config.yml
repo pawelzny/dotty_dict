@@ -1,146 +1,161 @@
-# Python CircleCI 2.0 configuration file
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-version: 2
+# Python CircleCI 2.1 configuration file
+version: 2.1
 
 defaults: &defaults
   working_directory: ~/repo
 
 read_cache: &read_cache
   keys:
-  - v1-dependencies-{{ checksum "Pipfile.lock" }}
+  - v1-dependencies-{{ checksum "poetry.lock" }}
   - v1-dependencies-
 
 store_cache: &store_cache
   paths:
   - ./repo
-  key: v1-dependencies-{{ checksum "Pipfile.lock" }}
+  key: v1-dependencies-{{ checksum "poetry.lock" }}
 
 run_tests: &run_tests
   name: run tests
-  command: pipenv run pytest
+  command: poetry run pytest
+
+install_deps: &install_deps
+  name: install dependencies
+  command: poetry install --no-root
 
 jobs:
   py35:
     <<: *defaults
     docker:
-    - image: circleci/python:3.5.6
+    - image: cimg/python:3.5.10
     steps:
     - checkout
     - restore_cache: *read_cache
-    - run:
-        name: install dependencies
-        command: |
-          pipenv install --python 3.5 --ignore-pipfile
-          pipenv install --python 3.5 --dev --ignore-pipfile
+    - run: *install_deps
     - save_cache: *store_cache
     - run: *run_tests
   py36:
     <<: *defaults
     docker:
-    - image: circleci/python:3.6.7
+    - image: cimg/python:3.6.15
     steps:
     - checkout
     - restore_cache: *read_cache
-    - run:
-        name: install dependencies
-        command: |
-          pipenv install --python 3.6 --ignore-pipfile
-          pipenv install --python 3.6 --dev --ignore-pipfile
+    - run: *install_deps
     - save_cache: *store_cache
     - run: *run_tests
   py37:
     <<: *defaults
     docker:
-    - image: circleci/python:3.7.1
+    - image: cimg/python:3.7.13
     steps:
     - checkout
     - restore_cache: *read_cache
-    - run:
-        name: install dependencies
-        command: |
-          pipenv install --python 3.7 --ignore-pipfile
-          pipenv install --python 3.7 --dev --ignore-pipfile
+    - run: *install_deps
     - save_cache: *store_cache
     - run: *run_tests
   py38:
     <<: *defaults
     docker:
-      - image: circleci/python:3.8.0a3
+      - image: cimg/python:3.8.13
+    steps:
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - save_cache: *store_cache
+      - run: *run_tests
+  py39:
+    <<: *defaults
+    docker:
+      - image: cimg/python:3.9.13
+    steps:
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - save_cache: *store_cache
+      - run: *run_tests
+  py310:
+    <<: *defaults
+    docker:
+      - image: cimg/python:3.10.5
+    steps:
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - save_cache: *store_cache
+      - run: *run_tests
+  pypy38:
+    docker:
+    - image: pypy:3.8-7.3.9
+    <<: *defaults
+    steps:
+    - checkout
+    - restore_cache: *read_cache
+    - run:
+        name: install dependencies
+        command: pip install pytest
+    - save_cache: *store_cache
+    - run:
+        name: run tests
+        command: pytest
+  pypy39:
+    docker:
+      - image: pypy:3.9-7.3.9
+    <<: *defaults
     steps:
       - checkout
       - restore_cache: *read_cache
       - run:
           name: install dependencies
-          command: |
-            pipenv install --python 3.8 --ignore-pipfile
-            pipenv install --python 3.8 --dev --ignore-pipfile
+          command: pip install pytest
       - save_cache: *store_cache
-      - run: *run_tests
-
-  pypy35:
-    docker:
-    - image: pypy:3-5.10
-    <<: *defaults
-    steps:
-    - checkout
-    - restore_cache: *read_cache
-    - run:
-        name: Install pipenv
-        command: pip install pipenv==11.7.4
-    - run:
-        name: Install missing libraries
-        command: |
-          pipenv --python `which pypy3` run pip install pathlib2
-    - run:
-        name: install dependencies
-        command: |
-          pipenv install --python `which pypy3` --ignore-pipfile
-          pipenv install --python `which pypy3` --dev --ignore-pipfile
-    - save_cache: *store_cache
-    - run: *run_tests
-
+      - run:
+          name: run tests
+          command: pytest
   flake8:
     docker:
-      - image: circleci/python:3.6.4
+      - image: cimg/python:3.8.13
     <<: *defaults
     steps:
     - checkout
     - restore_cache: *read_cache
-    - run:
-        name: install dependencies
-        command: |
-          pipenv install --python 3.6 --ignore-pipfile
-          pipenv install --python 3.6 --dev --ignore-pipfile
+    - run: *install_deps
     - save_cache: *store_cache
     - run:
-        name: run tests
-        command: pipenv run flake8 vo tests
-
+        name: run flake8
+        command: poetry run flake8
   docs:
     docker:
-      - image: circleci/python:3.6.4
+      - image: cimg/python:3.8.13
     <<: *defaults
     steps:
     - checkout
     - restore_cache: *read_cache
+    - run: *install_deps
     - run:
-        name: install dependencies
+        name: Install Sphinx
         command: |
-          pipenv install --python 3.6 --ignore-pipfile
-          pipenv install --python 3.6 --dev --ignore-pipfile
+          sudo apt update
+          sudo apt install -y python3-sphinx python3-sphinx-rtd-theme
     - save_cache: *store_cache
     - run:
-        name: build docs
-        command: pipenv run make docs
+        name: run doctest
+        command: sphinx-build -aEW -b html -d docs/_build/doctrees docs docs/_build/html
 
 workflows:
   version: 2
-  test_all:
+  linters:
+    jobs:
+      - flake8
+  unit-tests:
     jobs:
       - py35
       - py36
       - py37
       - py38
-      - pypy35
-      - flake8
+      - py39
+      - py310
+      - pypy38
+      - pypy39
+  release-dry-run:
+    jobs:
       - docs

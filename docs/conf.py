@@ -22,8 +22,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Dotty Dict'
-copyright = u'2017, Paweł Zadrożny'
-author = u'Paweł Zadrożny'
+copyright = u'2017, Pawel Zadrozny'
+author = u'Pawel Zadrozny'
 
 # The short X.Y version
 version = __version__
@@ -134,7 +134,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'DottyDict.tex', 'Dotty Dict Documentation',
-     u'Paweł Zadrożny', 'manual'),
+     u'Pawel Zadrozny', 'manual'),
 ]
 
 # -- Options for manual page output ------------------------------------------
