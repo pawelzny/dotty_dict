@@ -8,8 +8,8 @@ except ImportError:
 from functools import lru_cache
 import json
 
-__author__ = 'Paweł Zadrożny'
-__copyright__ = 'Copyright (c) 2017, Paweł Zadrożny'
+__author__ = 'Pawel Zadrozny'
+__copyright__ = 'Copyright (c) 2017, Pawel Zadrozny'
 
 
 def dotty(dictionary=None, no_list=False):
@@ -118,8 +118,8 @@ class Dotty:
         :return: Converted or unchanged item
         :rtype: any type
         """
-        data_types = set([type(i) for i in data.keys()])
-        for t in data_types:
+        data_types = [type(i) for i in data.keys()]
+        for t in set(data_types):
             try:
                 if t(item) in data:
                     item = t(item)
@@ -128,7 +128,7 @@ class Dotty:
                 pass
         return item
 
-    @lru_cache(maxsize=32)
+    @lru_cache(maxsize=32)  # noqa: B019  # TODO: find a workaround for B019
     def __getitem__(self, item):
         def get_from(items, data):
             """Recursively get value from dictionary deep key.
@@ -144,16 +144,17 @@ class Dotty:
             elif it not in data and isinstance(data, dict):
                 it = self._find_data_type(it, data)
             elif isinstance(data, list) and ':' in it and not self.no_list:
-                list_slice = slice(*map(lambda x: None if x == '' else int(x), it.split(':')))
+                # TODO: fix C417 Unnecessary use of map - use a generator expression instead.
+                list_slice = slice(*map(lambda x: None if x == '' else int(x), it.split(':')))  # noqa: C417
                 if items:
-                    return [get_from(items.copy(), x) for x in  data[list_slice]]
+                    return [get_from(items.copy(), x) for x in data[list_slice]]
                 else:
                     return data[list_slice]
             try:
                 data = data[it]
             except TypeError:
                 raise KeyError("List index must be an integer, got {}".format(it))
-            if items:
+            if items and data is not None:
                 return get_from(items, data)
             else:
                 return data
@@ -321,7 +322,6 @@ class Dotty:
         """
         return json.dumps(self._data, cls=DottyEncoder)
 
-
     def _split(self, key):
         """Split dot notated chain of keys.
 
@@ -360,4 +360,3 @@ class DottyEncoder(json.JSONEncoder):
             return obj._data
         else:
             return json.JSONEncoder.default(self, obj)
-

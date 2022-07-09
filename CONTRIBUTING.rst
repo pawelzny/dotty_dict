@@ -72,30 +72,37 @@ Ready to contribute? Here's how to set up `dotty_dict` for local development.
 
     $ git clone git@github.com:your_name_here/dotty_dict.git
 
-3. Install your local copy into a virtualenv. Assuming you have PipEnv installed,
-this is how you set up your fork for local development::
+3. Install your local copy into a virtualenv. This is how you set up your fork for local development::
 
     $ cd dotty_dict/
-    $ make install-dev
+    $ make install
+
+or if you don't have 'make', do it manually::
+
+    $ cd dotty_dict/
+    $ pip install poetry==1.1.14
+    $ poetry install --no-root
 
 4. Create a branch for local development::
 
     $ git checkout -b name-of-your-bugfix-or-feature
 
-   Now you can make your changes locally.
+   Now you can introduce your changes locally.
 
 5. When you're done making changes, check that your changes pass flake8 and the
    tests, including testing other Python versions with tox::
 
     $ make test-all
 
-   To get flake8 and tox, just pip install them into your virtualenv.
+or if you don't have 'make', run tox directly::
+
+    $ poetry run tox --skip-missing-interpreters
 
 6. Commit your changes and push your branch to GitHub::
 
     $ git add .
     $ git commit -m "Your detailed description of your changes."
-    $ git push origin name-of-your-bugfix-or-feature
+    $ git push origin HEAD
 
 7. Submit a pull request through the GitHub website.
 
@@ -110,7 +117,7 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 3. The pull request should work for:
-   **Python 3.5**, **Python 3.6**, and for **PyPy3.5-5.10**.
+   **Python >=3.5,<4.0** and for **>=PyPy3.8-7.3.9**.
 
    Check https://circleci.com/gh/pawelzny/dotty_dict
    and make sure that the tests pass for all supported Python versions.

@@ -10,7 +10,7 @@ from setuptools.command.install import install
 from setuptools.command.test import test
 
 __author__ = 'Pawel Zadrozny'
-__copyright__ = 'Copyright (c) 2018, Pawelzny'
+__copyright__ = 'Copyright (c) 2018, Pawel Zadrozny'
 
 with open('README.rst', 'r') as readme_file:
     readme = readme_file.read()
@@ -70,6 +70,8 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'License :: OSI Approved :: MIT License',
