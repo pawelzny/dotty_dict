@@ -64,6 +64,7 @@ flake8-comprehensions = [
 flake8-rst-docstrings = [
     {version = "0.2.6", python = ">=3.8"},
 ]
+pytest-flakefinder = "1.0.0"
 
 [tool.flake8]
 max-line-length = 100
