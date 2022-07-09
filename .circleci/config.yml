@@ -1,24 +1,29 @@
 # Python CircleCI 2.1 configuration file
 version: 2.1
 
-defaults: &defaults
+defaults:
+  &defaults
   working_directory: ~/repo
 
-read_cache: &read_cache
+read_cache:
+  &read_cache
   keys:
-  - v1-dependencies-{{ checksum "poetry.lock" }}
-  - v1-dependencies-
+    - v1-dependencies-{{ checksum "poetry.lock" }}
+    - v1-dependencies-
 
-store_cache: &store_cache
+store_cache:
+  &store_cache
   paths:
-  - ./repo
+    - ./repo
   key: v1-dependencies-{{ checksum "poetry.lock" }}
 
-run_tests: &run_tests
+run_tests:
+  &run_tests
   name: run tests
   command: poetry run pytest
 
-install_deps: &install_deps
+install_deps:
+  &install_deps
   name: install dependencies
   command: poetry install --no-root
 
@@ -26,33 +31,33 @@ jobs:
   py35:
     <<: *defaults
     docker:
-    - image: cimg/python:3.5.10
+      - image: cimg/python:3.5.10
     steps:
-    - checkout
-    - restore_cache: *read_cache
-    - run: *install_deps
-    - save_cache: *store_cache
-    - run: *run_tests
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - save_cache: *store_cache
+      - run: *run_tests
   py36:
     <<: *defaults
     docker:
-    - image: cimg/python:3.6.15
+      - image: cimg/python:3.6.15
     steps:
-    - checkout
-    - restore_cache: *read_cache
-    - run: *install_deps
-    - save_cache: *store_cache
-    - run: *run_tests
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - save_cache: *store_cache
+      - run: *run_tests
   py37:
     <<: *defaults
     docker:
-    - image: cimg/python:3.7.13
+      - image: cimg/python:3.7.13
     steps:
-    - checkout
-    - restore_cache: *read_cache
-    - run: *install_deps
-    - save_cache: *store_cache
-    - run: *run_tests
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - save_cache: *store_cache
+      - run: *run_tests
   py38:
     <<: *defaults
     docker:
@@ -85,18 +90,18 @@ jobs:
       - run: *run_tests
   pypy38:
     docker:
-    - image: pypy:3.8-7.3.9
+      - image: pypy:3.8-7.3.9
     <<: *defaults
     steps:
-    - checkout
-    - restore_cache: *read_cache
-    - run:
-        name: install dependencies
-        command: pip install pytest
-    - save_cache: *store_cache
-    - run:
-        name: run tests
-        command: pytest
+      - checkout
+      - restore_cache: *read_cache
+      - run:
+          name: install dependencies
+          command: pip install pytest
+      - save_cache: *store_cache
+      - run:
+          name: run tests
+          command: pytest
   pypy39:
     docker:
       - image: pypy:3.9-7.3.9
@@ -116,30 +121,32 @@ jobs:
       - image: cimg/python:3.8.13
     <<: *defaults
     steps:
-    - checkout
-    - restore_cache: *read_cache
-    - run: *install_deps
-    - save_cache: *store_cache
-    - run:
-        name: run flake8
-        command: poetry run flake8
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - save_cache: *store_cache
+      - run:
+          name: run flake8
+          command: poetry run flake8
   docs:
     docker:
       - image: cimg/python:3.8.13
     <<: *defaults
     steps:
-    - checkout
-    - restore_cache: *read_cache
-    - run: *install_deps
-    - run:
-        name: Install Sphinx
-        command: |
-          sudo apt update
-          sudo apt install -y python3-sphinx python3-sphinx-rtd-theme
-    - save_cache: *store_cache
-    - run:
-        name: run doctest
-        command: sphinx-build -aEW -b html -d docs/_build/doctrees docs docs/_build/html
+      - checkout
+      - restore_cache: *read_cache
+      - run: *install_deps
+      - run:
+          name: Install Sphinx
+          command: |
+            sudo apt update
+            sudo apt install -y python3-sphinx python3-sphinx-rtd-theme
+      - save_cache: *store_cache
+      - run:
+          name: run doctest
+          command: sphinx-build -aEW -b html -d docs/_build/doctrees docs docs/_build/html
+    # The resource_class feature allows configuring CPU and RAM resources for each job. Different resource classes are available for different executors. https://circleci.com/docs/2.0/configuration-reference/#resourceclass
+    resource_class: large
 
 workflows:
   version: 2
