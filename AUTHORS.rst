@@ -6,7 +6,7 @@ Credits
 Development
 ***********
 
-* Paweł Zadrożny @pawelzny <pawel.zny@gmail.com>
+* Pawel Zadrozny @pawelzny <pawel.zny@gmail.com>
 
 
 ************

@@ -5,8 +5,8 @@ help:
 	@perl -nle'print $& if m{^[a-zA-Z_-]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
 
 install: ## install dependencies
-	pipenv install
-	pipenv install --dev
+	pip install poetry==1.1.14
+	poetry install --no-root
 
 clean: clean-build clean-pyc clean-cache
 
@@ -25,29 +25,29 @@ clean-cache: ## remove .cache and .pytest_cache
 	rm -rf .pytest_cache
 
 lint: ## check style with flake8
-	pipenv run flake8
+	poetry run flake8
 
 test: ## run tests quickly with the default Python
-	pipenv run pytest
+	poetry run pytest
 
 test-all: ## run tests on every Python version with tox
-	pipenv run tox --skip-missing-interpreters
+	poetry run tox --skip-missing-interpreters
 
 coverage: ## check code coverage quickly with the default Python
 	rm -rf htmlcov
-	pipenv run coverage erase
-	pipenv run coverage run -m pytest
-	pipenv run coverage report -m
-	pipenv run coverage html
+	poetry run coverage erase
+	poetry run coverage run -m pytest
+	poetry run coverage report -m
+	poetry run coverage html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	pipenv run $(MAKE) -C docs clean
-	pipenv run $(MAKE) -C docs html
+	$(MAKE) -C docs clean
+	$(MAKE) -C docs html
 
 release: sdist ## package and upload a release
 	pipenv run twine upload dist/*
 
-sdist: clean ## package
-	pipenv run python setup.py sdist
-	gpg --detach-sign -a dist/*.tar.gz
+build: clean ## package
+	poetry build
+	# gpg --detach-sign -a dist/*.tar.gz
 	ls -l dist
