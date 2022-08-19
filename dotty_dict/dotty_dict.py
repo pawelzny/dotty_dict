@@ -320,7 +320,6 @@ class Dotty:
 
         :return str: Wrapped dictionary as json string
         """
-
         return json.dumps(self._data, cls=DottyEncoder, default=str)
 
     def _split(self, key):
