@@ -320,7 +320,7 @@ class Dotty:
 
         :return str: Wrapped dictionary as json string
         """
-        return json.dumps(self._data, cls=DottyEncoder, default=str)
+        return json.dumps(self._data, cls=DottyEncoder)
 
     def _split(self, key):
         """Split dot notated chain of keys.
@@ -357,7 +357,10 @@ class DottyEncoder(json.JSONEncoder):
 
         :return: Serializable data
         """
-        if hasattr(obj, '_data'):
-            return obj._data
-        else:
-            return json.JSONEncoder.default(self, obj)
+        try:
+            if hasattr(obj, '_data'):
+                return obj._data
+            else:
+                return json.JSONEncoder.default(self, obj)
+        except TypeError:
+            return str(obj)
