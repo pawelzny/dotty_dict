@@ -320,7 +320,8 @@ class Dotty:
 
         :return str: Wrapped dictionary as json string
         """
-        return json.dumps(self._data, cls=DottyEncoder)
+
+        return json.dumps(self._data, cls=DottyEncoder, default=str)
 
     def _split(self, key):
         """Split dot notated chain of keys.
@@ -349,6 +350,7 @@ class Dotty:
 class DottyEncoder(json.JSONEncoder):
     """Helper class for encoding of nested Dotty dicts into standard dict
     """
+
     def default(self, obj):
         """Return dict data of Dotty when possible or encode with standard format
 
