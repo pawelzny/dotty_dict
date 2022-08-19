@@ -18,4 +18,3 @@ class TestListInDotty(unittest.TestCase):
         })
 
         self.assertEqual(dot.to_dict(), {'date': 'test'})
-
