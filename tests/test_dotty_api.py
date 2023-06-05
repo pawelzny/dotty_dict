@@ -62,11 +62,11 @@ class TestDictSpecificMethods(unittest.TestCase):
         self.assertListEqual(keys, ['ridiculous', 'secret'])
 
     def test_iterate(self):
-        keys = sorted([key for key in self.dot])
+        keys = sorted(key for key in self.dot)
         self.assertListEqual(keys, ['deep', 'flat_key'])
 
     def test_iterate_from_deeply_nested_structure(self):
-        keys = sorted([key for key in self.dot['deep.deeper']])
+        keys = sorted(key for key in self.dot['deep.deeper'])
         self.assertListEqual(keys, ['ridiculous', 'secret'])
 
     def test_get_value_without_default(self):
