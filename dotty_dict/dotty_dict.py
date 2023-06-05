@@ -101,6 +101,10 @@ class Dotty:
             return it in data
 
         return search_in(self._split(item), self._data)
+    
+    def __iter__(self):
+        for iteration in self._data:
+            yield iteration
 
     @staticmethod
     def _find_data_type(item, data):
