@@ -8,8 +8,8 @@ except ImportError:
 from functools import lru_cache
 import json
 
-__author__ = 'Pawel Zadrozny'
-__copyright__ = 'Copyright (c) 2017, Pawel Zadrozny'
+__author__ = "Pawel Zadrozny"
+__copyright__ = "Copyright (c) 2017, Pawel Zadrozny"
 
 
 def dotty(dictionary=None, no_list=False):
@@ -23,7 +23,7 @@ def dotty(dictionary=None, no_list=False):
     """
     if dictionary is None:
         dictionary = {}
-    return Dotty(dictionary, separator='.', esc_char='\\', no_list=no_list)
+    return Dotty(dictionary, separator=".", esc_char="\\", no_list=no_list)
 
 
 class Dotty:
@@ -46,9 +46,9 @@ class Dotty:
     :param bool no_list: If set to True then numeric keys will NOT be converted to list indices
     """
 
-    def __init__(self, dictionary, separator='.', esc_char='\\', no_list=False):
+    def __init__(self, dictionary, separator=".", esc_char="\\", no_list=False):
         if not isinstance(dictionary, (Mapping, dict)):
-            raise AttributeError('Dictionary must be type of dict')
+            raise AttributeError("Dictionary must be type of dict")
         else:
             self._data = dictionary
         self.separator = separator
@@ -56,8 +56,7 @@ class Dotty:
         self.no_list = no_list
 
     def __repr__(self):
-        return 'Dotty(dictionary={}, separator={!r}, esc_char={!r})'.format(
-            self._data, self.separator, self.esc_char)
+        return "Dotty(dictionary={}, separator={!r}, esc_char={!r})".format(self._data, self.separator, self.esc_char)
 
     def __str__(self):
         return str(self._data)
@@ -101,7 +100,7 @@ class Dotty:
             return it in data
 
         return search_in(self._split(item), self._data)
-    
+
     def __iter__(self):
         for iteration in self._data:
             yield iteration
@@ -147,9 +146,9 @@ class Dotty:
                 it = int(it)
             elif it not in data and isinstance(data, dict):
                 it = self._find_data_type(it, data)
-            elif isinstance(data, list) and ':' in it and not self.no_list:
+            elif isinstance(data, list) and ":" in it and not self.no_list:
                 # TODO: fix C417 Unnecessary use of map - use a generator expression instead.
-                list_slice = slice(*map(lambda x: None if x == '' else int(x), it.split(':')))  # noqa: C417
+                list_slice = slice(*map(lambda x: None if x == "" else int(x), it.split(":")))  # noqa: C417
                 if items:
                     return [get_from(items.copy(), x) for x in data[list_slice]]
                 else:
@@ -174,7 +173,6 @@ class Dotty:
             """
             it = items.pop(0)
             if items:
-
                 if items[0].isdigit():
                     next_item = []
                 else:
@@ -336,11 +334,11 @@ class Dotty:
         """
         if not isinstance(key, str):
             return [key]
-        esc_stamp = (self.esc_char + self.separator, '<#esc#>')
-        skp_stamp = ('\\' + self.esc_char + self.separator, '<#skp#>' + self.separator)
+        esc_stamp = (self.esc_char + self.separator, "<#esc#>")
+        skp_stamp = ("\\" + self.esc_char + self.separator, "<#skp#>" + self.separator)
 
-        stamp_esc = ('<#esc#>', self.separator)
-        stamp_skp = ('<#skp#>', self.esc_char)
+        stamp_esc = ("<#esc#>", self.separator)
+        stamp_skp = ("<#skp#>", self.esc_char)
 
         key = key.replace(*skp_stamp).replace(*esc_stamp)
         keys = key.split(self.separator)
@@ -351,8 +349,8 @@ class Dotty:
 
 
 class DottyEncoder(json.JSONEncoder):
-    """Helper class for encoding of nested Dotty dicts into standard dict
-    """
+    """Helper class for encoding of nested Dotty dicts into standard dict"""
+
     def default(self, obj):
         """Return dict data of Dotty when possible or encode with standard format
 
@@ -360,7 +358,7 @@ class DottyEncoder(json.JSONEncoder):
 
         :return: Serializable data
         """
-        if hasattr(obj, '_data'):
+        if hasattr(obj, "_data"):
             return obj._data
         else:
             return json.JSONEncoder.default(self, obj)
