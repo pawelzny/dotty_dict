@@ -96,6 +96,9 @@ class Dotty:
                 else:
                     return False
 
+            if not data:
+                return False
+
             if items and it in data:
                 return search_in(items, data[it])
             return it in data
