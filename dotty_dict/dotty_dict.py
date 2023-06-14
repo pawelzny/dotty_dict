@@ -96,6 +96,9 @@ class Dotty:
                 else:
                     return False
 
+            if not data:
+                return False
+
             if items and it in data:
                 return search_in(items, data[it])
             return it in data
@@ -349,6 +352,7 @@ class Dotty:
 class DottyEncoder(json.JSONEncoder):
     """Helper class for encoding of nested Dotty dicts into standard dict
     """
+
     def default(self, obj):
         """Return dict data of Dotty when possible or encode with standard format
 
@@ -356,7 +360,10 @@ class DottyEncoder(json.JSONEncoder):
 
         :return: Serializable data
         """
-        if hasattr(obj, '_data'):
-            return obj._data
-        else:
-            return json.JSONEncoder.default(self, obj)
+        try:
+            if hasattr(obj, '_data'):
+                return obj._data
+            else:
+                return json.JSONEncoder.default(self, obj)
+        except TypeError:
+            return str(obj)
