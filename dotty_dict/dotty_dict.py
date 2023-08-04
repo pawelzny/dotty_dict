@@ -86,7 +86,7 @@ class Dotty:
             :return bool: Predicate of key existence
             """
             it = items.pop(0)
-            if it.isdigit():
+            if it.lstrip("-").isdigit():
                 idx = int(it)
                 if idx < len(data):
                     if items:
@@ -139,7 +139,7 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            if isinstance(data, list) and it.isdigit() and not self.no_list:
+            if isinstance(data, list) and it.lstrip("-").isdigit() and not self.no_list:
                 it = int(it)
             elif it not in data and isinstance(data, dict):
                 it = self._find_data_type(it, data)
@@ -171,12 +171,12 @@ class Dotty:
             it = items.pop(0)
             if items:
 
-                if items[0].isdigit():
+                if items[0].lstrip("-").isdigit():
                     next_item = []
                 else:
                     next_item = {}
 
-                if it.isdigit():
+                if it.lstrip("-").isdigit():
                     it = int(it)
                     try:
                         if not data[it]:
@@ -190,7 +190,7 @@ class Dotty:
                     set_to(items, data[it])
 
             else:
-                if it.isdigit():
+                if it.lstrip("-").isdigit():
                     self.set_list_index(data, it, value)
                 else:
                     data[it] = value
@@ -220,7 +220,7 @@ class Dotty:
             :raises KeyError: If key does not exist
             """
             it = items.pop(0)
-            if it.isdigit():
+            if it.lstrip("-").isdigit():
                 it = int(it)
             if items:
                 del_key(items, data[it])
