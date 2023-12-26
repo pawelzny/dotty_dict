@@ -8,6 +8,10 @@ except ImportError:
 from functools import lru_cache
 import json
 
+# MOD: import necessary for __eq__ method modification to support dotty keys
+# containing pandas DataFrame object
+from itertools import chain
+
 __author__ = 'Pawel Zadrozny'
 __copyright__ = 'Copyright (c) 2017, Pawel Zadrozny'
 
@@ -67,7 +71,19 @@ class Dotty:
 
     def __eq__(self, other):
         try:
-            return sorted(self._data.items()) == sorted(other.items())
+
+            # contruct alternative to better manage eq function
+            # flat items at given level in a list
+            items_list = sorted(set(chain(*self._data.values())))
+            other_list = sorted(set(chain(*other.values())))
+            return items_list == other_list
+        # if new main method proposed fails on on any exception
+        # try legacy as a backup
+        except Exception:
+            try:
+                return sorted(self._data.items()) == sorted(other.items())
+            except AttributeError:
+                return False
         except AttributeError:
             return False
 

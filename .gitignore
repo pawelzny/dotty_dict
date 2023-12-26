@@ -63,3 +63,7 @@ target/
 .python-version
 .idea/
 /.pytest_cache/
+
+# IDEs
+.spyproject/
+.vscode/

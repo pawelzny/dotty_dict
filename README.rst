@@ -50,6 +50,7 @@ Features
 * key=value caching to speed up lookups and low down memory consumption
 * support for setting value in multidimensional lists
 * support for accessing lists with slices
+* support for pandas dataframe as value data type
 
 
 Installation
@@ -75,7 +76,9 @@ Documentation
 TODO
 ====
 
-Waiting for your feature requests ;)
+* add testing with other dataframe types other than pandas
+* add simultaneous support for runnin all make commands from a linux or windows system
+* Waiting for your feature requests ;)
 
 
 Quick Example
@@ -138,6 +141,14 @@ Or full tests with TOX:
 
 Limitations
 ===========
+
+Testing status:
+
+* In order to test with the latest pandas version, for now tested and supported python interpreter is Cython and versions tested are 3.9 and 3.10
+* Tox targets passed on Windows 11 x64:
+   - py3.9
+   - py3.10
+   - flake8
 
 In some very rare cases dotty may not work properly.
 
