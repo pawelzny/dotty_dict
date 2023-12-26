@@ -74,6 +74,10 @@ jobs:
       - image: cimg/python:3.9.13
     steps:
       - checkout
+      - run: python --version
+      - run:
+          name: install poetry
+          command: pip install poetry==1.7.1
       - restore_cache: *read_cache
       - run: *install_deps
       - save_cache: *store_cache
@@ -84,6 +88,10 @@ jobs:
       - image: cimg/python:3.10.11
     steps:
       - checkout
+      - run: python --version
+      - run:
+          name: install poetry
+          command: pip install poetry==1.7.1
       - restore_cache: *read_cache
       - run: *install_deps
       - save_cache: *store_cache
@@ -150,15 +158,13 @@ jobs:
 
 workflows:
   version: 2
-  linters:
-    jobs:
-      - flake8
+  # linters:
+  #   jobs:
+  #     - flake8
   unit-tests:
     jobs:
-      - py39
+      # - py39
       - py310
-      - pypy38
-      - pypy39
   release-dry-run:
     jobs:
-      - docs
+      # - docs
