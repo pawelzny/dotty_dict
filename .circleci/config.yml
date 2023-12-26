@@ -81,7 +81,7 @@ jobs:
   py310:
     <<: *defaults
     docker:
-      - image: cimg/python:3.10.5
+      - image: cimg/python:3.10.11
     steps:
       - checkout
       - restore_cache: *read_cache
@@ -118,7 +118,7 @@ jobs:
           command: pytest
   flake8:
     docker:
-      - image: cimg/python:3.8.13
+      - image: cimg/python:3.10.11
     <<: *defaults
     steps:
       - checkout
@@ -130,7 +130,7 @@ jobs:
           command: poetry run flake8
   docs:
     docker:
-      - image: cimg/python:3.8.13
+      - image: cimg/python:3.10.11
     <<: *defaults
     steps:
       - checkout
@@ -155,10 +155,6 @@ workflows:
       - flake8
   unit-tests:
     jobs:
-      - py35
-      - py36
-      - py37
-      - py38
       - py39
       - py310
       - pypy38
