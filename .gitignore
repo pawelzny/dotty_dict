@@ -67,3 +67,6 @@ target/
 # IDEs
 .spyproject/
 .vscode/
+
+# pull request info
+.pullrequest/
