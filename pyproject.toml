@@ -31,7 +31,8 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.5,<4.0"
+python = ">=3.9,<4.0"
+pandas = "^2.1.4"
 
 [tool.poetry.dev-dependencies]
 pytest = [

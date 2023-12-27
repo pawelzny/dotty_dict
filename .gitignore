@@ -63,3 +63,10 @@ target/
 .python-version
 .idea/
 /.pytest_cache/
+
+# IDEs
+.spyproject/
+.vscode/
+
+# pull request info
+.pullrequest/

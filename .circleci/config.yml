@@ -17,6 +17,11 @@ store_cache:
     - ./repo
   key: v1-dependencies-{{ checksum "poetry.lock" }}
 
+install_poetry:
+  &install_poetry
+  name: install poetry
+  command: pip install poetry==1.7.1
+
 run_tests:
   &run_tests
   name: run tests
@@ -74,6 +79,7 @@ jobs:
       - image: cimg/python:3.9.13
     steps:
       - checkout
+      - run: *install_poetry
       - restore_cache: *read_cache
       - run: *install_deps
       - save_cache: *store_cache
@@ -81,9 +87,10 @@ jobs:
   py310:
     <<: *defaults
     docker:
-      - image: cimg/python:3.10.5
+      - image: cimg/python:3.10.13
     steps:
       - checkout
+      - run: *install_poetry
       - restore_cache: *read_cache
       - run: *install_deps
       - save_cache: *store_cache
@@ -118,10 +125,11 @@ jobs:
           command: pytest
   flake8:
     docker:
-      - image: cimg/python:3.8.13
+      - image: cimg/python:3.10.13
     <<: *defaults
     steps:
       - checkout
+      - run: *install_poetry
       - restore_cache: *read_cache
       - run: *install_deps
       - save_cache: *store_cache
@@ -130,10 +138,11 @@ jobs:
           command: poetry run flake8
   docs:
     docker:
-      - image: cimg/python:3.8.13
+      - image: cimg/python:3.10.13
     <<: *defaults
     steps:
       - checkout
+      - run: *install_poetry
       - restore_cache: *read_cache
       - run: *install_deps
       - run:
@@ -146,7 +155,7 @@ jobs:
           name: run doctest
           command: sphinx-build -aEW -b html -d docs/_build/doctrees docs docs/_build/html
     # The resource_class feature allows configuring CPU and RAM resources for each job. Different resource classes are available for different executors. https://circleci.com/docs/2.0/configuration-reference/#resourceclass
-    resource_class: large
+    resource_class: medium
 
 workflows:
   version: 2
@@ -155,14 +164,8 @@ workflows:
       - flake8
   unit-tests:
     jobs:
-      - py35
-      - py36
-      - py37
-      - py38
       - py39
       - py310
-      - pypy38
-      - pypy39
   release-dry-run:
     jobs:
       - docs
