@@ -2,8 +2,8 @@
 Dotty-Dict
 **********
 
-:Info: Dictionary wrapper for quick access to deeply nested keys.
-:Author: Pawel Zadrozny @pawelzny <pawel.zny@gmail.com>
+:Info: This is a fork of dictionary wrapper for quick access to deeply nested keys.
+:Author: Pawel Zadrozny @pawelzny <pawel.zny@gmail.com>, Risto Kowaczewski
 
 .. image:: https://circleci.com/gh/pawelzny/dotty_dict/tree/master.svg?style=shield&circle-token=77f51e87481f339d69ca502fdbb0c2b1a76c0369
    :target: https://circleci.com/gh/pawelzny/dotty_dict/tree/master

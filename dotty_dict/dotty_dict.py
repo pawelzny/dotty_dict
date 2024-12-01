@@ -96,6 +96,9 @@ class Dotty:
                 else:
                     return False
 
+            if not data:
+                return False
+
             if items and it in data:
                 return search_in(items, data[it])
             return it in data
@@ -197,6 +200,21 @@ class Dotty:
 
         set_to(self._split(key), self._data)
 
+    def __getstate__(self):
+        return {
+            '_data': self._data,
+            'separator': self.separator,
+            'esc_char': self.esc_char,
+            'no_list': self.no_list
+        }
+
+    def __setstate__(self, state):
+        self._data = state['_data']
+        self.separator = state['separator']
+        self.esc_char = state['esc_char']
+        self.no_list = state['no_list']
+
+
     @staticmethod
     def set_list_index(data, index, value):
         """Set value in list at specified index.
@@ -213,7 +231,7 @@ class Dotty:
 
     def __delitem__(self, key):
         def del_key(items, data):
-            """Recursively remove deep key from dict.
+            """Recursively remove deep key from dict and remove empty parent dictionaries.
 
             :param list items: List of dictionary keys
             :param data: Portion of dictionary to operate on
@@ -224,8 +242,14 @@ class Dotty:
                 it = int(it)
             if items:
                 del_key(items, data[it])
+                # Remove the parent dictionary if it's empty
+                if isinstance(data[it], dict) and not data[it]:
+                    del data[it]
             else:
                 del data[it]
+                # Remove the parent dictionary if it's empty
+                if isinstance(data, dict) and not data:
+                    data.clear()
 
         del_key(self._split(key), self._data)
 
@@ -349,6 +373,7 @@ class Dotty:
 class DottyEncoder(json.JSONEncoder):
     """Helper class for encoding of nested Dotty dicts into standard dict
     """
+
     def default(self, obj):
         """Return dict data of Dotty when possible or encode with standard format
 
@@ -356,7 +381,10 @@ class DottyEncoder(json.JSONEncoder):
 
         :return: Serializable data
         """
-        if hasattr(obj, '_data'):
-            return obj._data
-        else:
-            return json.JSONEncoder.default(self, obj)
+        try:
+            if hasattr(obj, '_data'):
+                return obj._data
+            else:
+                return json.JSONEncoder.default(self, obj)
+        except TypeError:
+            return str(obj)
