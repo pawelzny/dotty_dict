@@ -92,7 +92,7 @@ class Dotty:
                     if items:
                         return search_in(items, data[idx])
                     else:
-                        return data[idx]
+                        return True
                 else:
                     return False
 
