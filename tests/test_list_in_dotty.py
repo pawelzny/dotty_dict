@@ -125,6 +125,15 @@ class TestListInDotty(unittest.TestCase):
         self.assertTrue('field.1' in dot)
         self.assertFalse('field.2' in dot)
 
+    def test_dotty_contains_falsy_list_element(self):
+        # A list element that exists but is falsy (0, '', None, False) must
+        # still report membership; __contains__ returned the element itself
+        # instead of a bool, so falsy elements were wrongly reported absent.
+        dot = dotty({'field': [0, '', None, False, 'truthy']})
+        for i in range(5):
+            self.assertIn('field.{}'.format(i), dot)
+        self.assertNotIn('field.5', dot)
+
     def test_root_level_field_is_none(self):
         dot = dotty({
             'field': None,
