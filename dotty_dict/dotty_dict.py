@@ -67,7 +67,7 @@ class Dotty:
 
     def __eq__(self, other):
         try:
-            return sorted(self._data.items()) == sorted(other.items())
+            return self._data == dict(other.items())
         except AttributeError:
             return False
 
