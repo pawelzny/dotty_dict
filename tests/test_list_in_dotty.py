@@ -255,3 +255,42 @@ class TestNoList(unittest.TestCase):
 
     def test_normal_key(self):
         self.assertEqual(self.dot['field1.key'], 'value6')
+
+
+class TestPopListItems(unittest.TestCase):
+
+    def test_pop_list_item(self):
+        data = dotty({'foo': {'bar': [1, 2, 3]}})
+        self.assertEqual(data.pop('foo.bar.0'), 1)
+        self.assertEqual(data['foo.bar'], [2, 3])
+
+    def test_pop_nested_dict_inside_list(self):
+        data = dotty({'items': [{'value': 1, 'keep': 2}]})
+        self.assertEqual(data.pop('items.0.value'), 1)
+        self.assertEqual(data['items'], [{'keep': 2}])
+
+    def test_pop_missing_list_index_returns_default(self):
+        data = dotty({'items': [1]})
+        self.assertEqual(data.pop('items.9', 'missing'), 'missing')
+        self.assertEqual(data.pop('items.9.value', 'missing'), 'missing')
+        self.assertEqual(data['items'], [1])
+
+    def test_pop_numeric_dictionary_key_is_not_a_list_index(self):
+        data = dotty({'items': {'0': 'value'}})
+        self.assertEqual(data.pop('items.0'), 'value')
+        self.assertEqual(data['items'], {})
+
+    def test_pop_nested_list_item(self):
+        data = dotty({'items': [[1, 2], [3]]})
+        self.assertEqual(data.pop('items.0.1'), 2)
+        self.assertEqual(data['items'], [[1], [3]])
+
+    def test_pop_zero_value_is_removed(self):
+        data = dotty({'items': [0, 1]})
+        self.assertEqual(data.pop('items.0'), 0)
+        self.assertEqual(data['items'], [1])
+
+    def test_no_list_does_not_interpret_list_indices(self):
+        data = dotty({'items': [1]}, no_list=True)
+        self.assertEqual(data.pop('items.0', 'missing'), 'missing')
+        self.assertEqual(data.to_dict(), {'items': [1]})

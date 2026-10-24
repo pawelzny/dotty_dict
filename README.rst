@@ -112,6 +112,22 @@ You can start with empty dotty
    >>> dot.get('very.not_existing.key')
    None
 
+Use ``pop`` with a non-negative list index to remove and return a list item,
+or continue through a list item to remove a nested dictionary key:
+
+.. code-block:: python
+
+   >>> dot = dotty({'items': [{'name': 'Sam'}, {'name': 'John'}]})
+   >>> dot.pop('items.0.name')
+   'Sam'
+   >>> dot.pop('items.1')
+   {'name': 'John'}
+   >>> dot.pop('items.9', 'missing')
+   'missing'
+
+An out-of-range list index returns the supplied default, just like a missing
+key. List index handling is disabled when ``no_list=True``.
+
 NOTE: Using integer in dictionary keys will be treated as embedded list index.
 
 Install for development

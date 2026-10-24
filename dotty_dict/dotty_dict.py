@@ -277,6 +277,13 @@ class Dotty:
 
         def pop_from(items, data):
             it = items.pop(0)
+            if isinstance(data, list) and it.isdigit() and not self.no_list:
+                it = int(it)
+                if it >= len(data):
+                    return default
+                if items:
+                    return pop_from(items, data[it])
+                return data.pop(it)
             if it not in data:
                 return default
             if items:
