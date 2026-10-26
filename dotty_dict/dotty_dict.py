@@ -332,17 +332,31 @@ class Dotty:
         """
         if not isinstance(key, str):
             return [key]
-        esc_stamp = (self.esc_char + self.separator, '<#esc#>')
-        skp_stamp = ('\\' + self.esc_char + self.separator, '<#skp#>' + self.separator)
-
-        stamp_esc = ('<#esc#>', self.separator)
-        stamp_skp = ('<#skp#>', self.esc_char)
-
-        key = key.replace(*skp_stamp).replace(*esc_stamp)
-        keys = key.split(self.separator)
-        for i, k in enumerate(keys):
-            keys[i] = k.replace(*stamp_esc).replace(*stamp_skp)
-
+        if not self.separator:
+            raise ValueError('empty separator')
+        if self.esc_char not in key:
+            return key.split(self.separator)
+        escaped_separator = self.esc_char + self.separator
+        escaped_escape = '\\' + escaped_separator
+        keys, current = [], []
+        index = 0
+        while index < len(key):
+            if key.startswith(escaped_escape, index):
+                current.append(self.esc_char)
+                keys.append(''.join(current))
+                current = []
+                index += len(escaped_escape)
+            elif key.startswith(escaped_separator, index):
+                current.append(self.separator)
+                index += len(escaped_separator)
+            elif key.startswith(self.separator, index):
+                keys.append(''.join(current))
+                current = []
+                index += len(self.separator)
+            else:
+                current.append(key[index])
+                index += 1
+        keys.append(''.join(current))
         return keys
 
 
