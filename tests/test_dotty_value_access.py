@@ -250,3 +250,21 @@ class TestDottyValueAccess(unittest.TestCase):
         self.assertEqual(dict_bool, 'bool')
         self.assertEqual(dict_none, 'None')
         self.assertEqual(nested_dict_float, 'nested_float')
+
+
+class TestEscapeTokenization(unittest.TestCase):
+    def test_custom_hash_separator(self):
+        dot = Dotty({'a#b': {'child': 1}}, separator='#', esc_char='!')
+        self.assertEqual(dot['a!#b#child'], 1)
+        dot['a!#b#new'] = 2
+        self.assertEqual(dot._data['a#b']['new'], 2)
+
+    def test_literal_marker_names(self):
+        for name in ('<#esc#>', '<#skp#>'):
+            with self.subTest(name=name):
+                dot = dotty({name: {'child': 1}})
+                self.assertEqual(dot[name + '.child'], 1)
+
+    def test_escaped_escape_with_custom_hash_separator(self):
+        dot = Dotty({'a!': {'child': 1}}, separator='#', esc_char='!')
+        self.assertEqual(dot[r'a\!#child'], 1)
