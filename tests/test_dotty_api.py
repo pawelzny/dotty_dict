@@ -217,3 +217,19 @@ class TestDictSpecificMethods(unittest.TestCase):
         dot = dotty().fromkeys({'a', 'b', 'c'}, value=10)
         self.assertDictEqual(dot.to_dict(), {'a': 10, 'b': 10, 'c': 10})
         self.assertIsInstance(dot, Dotty)
+
+
+class TestCopySettings(unittest.TestCase):
+    def test_copy_preserves_lookup_settings(self):
+        source = Dotty({'a/b': {'child': 1}, 'mapping': {'0': 'zero'}},
+                       separator='/', esc_char='!', no_list=True)
+        copied = source.copy()
+        self.assertEqual(copied.separator, '/')
+        self.assertEqual(copied.esc_char, '!')
+        self.assertTrue(copied.no_list)
+        self.assertEqual(copied['a!/b/child'], 1)
+        self.assertEqual(copied['mapping/0'], 'zero')
+        self.assertIsNot(copied._data, source._data)
+        self.assertIs(copied._data['mapping'], source._data['mapping'])
+        copied._data['extra'] = 2
+        self.assertNotIn('extra', source._data)

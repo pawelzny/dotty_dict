@@ -234,7 +234,8 @@ class Dotty:
 
         :return: Dotty instance
         """
-        return dotty(self._data.copy())
+        return type(self)(self._data.copy(), separator=self.separator,
+                          esc_char=self.esc_char, no_list=self.no_list)
 
     @staticmethod
     def fromkeys(seq, value=None):
