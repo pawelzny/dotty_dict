@@ -141,7 +141,7 @@ class Dotty:
             it = items.pop(0)
             if isinstance(data, list) and it.isdigit() and not self.no_list:
                 it = int(it)
-            elif it not in data and isinstance(data, dict):
+            elif isinstance(data, dict) and it not in data:
                 it = self._find_data_type(it, data)
             elif isinstance(data, list) and ':' in it and not self.no_list:
                 # TODO: fix C417 Unnecessary use of map - use a generator expression instead.
