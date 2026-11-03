@@ -171,12 +171,12 @@ class Dotty:
             it = items.pop(0)
             if items:
 
-                if items[0].isdigit():
+                if items[0].isdigit() and not self.no_list:
                     next_item = []
                 else:
                     next_item = {}
 
-                if it.isdigit():
+                if it.isdigit() and not self.no_list:
                     it = int(it)
                     try:
                         if not data[it]:
@@ -190,7 +190,7 @@ class Dotty:
                     set_to(items, data[it])
 
             else:
-                if it.isdigit():
+                if it.isdigit() and not self.no_list:
                     self.set_list_index(data, it, value)
                 else:
                     data[it] = value

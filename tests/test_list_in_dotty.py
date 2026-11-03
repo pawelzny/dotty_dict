@@ -255,3 +255,18 @@ class TestNoList(unittest.TestCase):
 
     def test_normal_key(self):
         self.assertEqual(self.dot['field1.key'], 'value6')
+
+    def test_set_numeric_keys_without_creating_lists(self):
+        dot = dotty(no_list=True)
+        dot['records.123.name'] = 'Alice'
+        self.assertEqual(dot.to_dict(), {'records': {'123': {'name': 'Alice'}}})
+        self.assertEqual(dot['records.123.name'], 'Alice')
+
+    def test_set_numeric_leaf_key(self):
+        dot = dotty(no_list=True)
+        dot['records.123'] = 'Alice'
+        self.assertEqual(dot.to_dict(), {'records': {'123': 'Alice'}})
+
+    def test_update_existing_numeric_key(self):
+        self.dot['field1.2.subfield1'] = 'updated'
+        self.assertEqual(self.dot['field1.2.subfield1'], 'updated')
